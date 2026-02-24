@@ -49,6 +49,11 @@ export class DefinitionLoader {
     return i !== undefined ? index.definitions[i] : undefined;
   }
 
+  getResourceNames(): string[] {
+    const index = this.ensureLoaded();
+    return Object.keys(index.resources);
+  }
+
   getElementDefinitions(resourceType: string): ElementDefinition[] {
     const sd = this.getResourceDefinition(resourceType);
     return sd?.snapshot?.element ?? [];
