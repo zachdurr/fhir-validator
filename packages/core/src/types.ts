@@ -4,6 +4,7 @@ export interface ValidationIssue {
   message: string;
   code: string;
   details?: string;
+  url?: string;
 }
 
 export interface ValidationResult {
