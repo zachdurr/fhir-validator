@@ -1,5 +1,7 @@
 import type { DefinitionLoader } from "../loader/DefinitionLoader.js";
 import type { ElementDefinition } from "../loader/types.js";
+import { MessageFormatter } from "../messages/MessageFormatter.js";
+import type { PropertyContext } from "../messages/MessageFormatter.js";
 import type { ValidationIssue, ValidationResult } from "../types.js";
 import { validatePrimitive } from "./primitives.js";
 
@@ -30,60 +32,27 @@ const PRIMITIVE_TYPES = new Set([
 const UNIVERSAL_PROPS = new Set(["id", "extension"]);
 
 export class StructureValidator {
+  private readonly formatter = new MessageFormatter();
+
   constructor(private readonly loader: DefinitionLoader) {}
 
   validate(resource: unknown): ValidationResult {
     const issues: ValidationIssue[] = [];
 
-    if (resource === null || resource === undefined) {
-      issues.push({
-        severity: "error",
-        path: "",
-        message: "Resource must be a non-null object",
-        code: "INVALID_RESOURCE",
-      });
-      return { valid: false, issues };
-    }
-
-    if (Array.isArray(resource)) {
-      issues.push({
-        severity: "error",
-        path: "",
-        message: "Resource must be an object, not an array",
-        code: "INVALID_RESOURCE",
-      });
-      return { valid: false, issues };
-    }
-
-    if (typeof resource !== "object") {
-      issues.push({
-        severity: "error",
-        path: "",
-        message: `Resource must be an object, got ${typeof resource}`,
-        code: "INVALID_RESOURCE",
-      });
+    if (resource === null || resource === undefined || Array.isArray(resource) || typeof resource !== "object") {
+      issues.push(this.formatter.formatInvalidResource(resource));
       return { valid: false, issues };
     }
 
     const obj = resource as Record<string, unknown>;
 
     if (!("resourceType" in obj) || obj.resourceType === undefined) {
-      issues.push({
-        severity: "error",
-        path: "",
-        message: "Resource is missing required field 'resourceType'",
-        code: "MISSING_RESOURCE_TYPE",
-      });
+      issues.push(this.formatter.formatMissingResourceType());
       return { valid: false, issues };
     }
 
     if (typeof obj.resourceType !== "string" || obj.resourceType.trim() === "") {
-      issues.push({
-        severity: "error",
-        path: "resourceType",
-        message: "resourceType must be a non-empty string",
-        code: "INVALID_RESOURCE_TYPE",
-      });
+      issues.push(this.formatter.formatInvalidResourceType(obj.resourceType));
       return { valid: false, issues };
     }
 
@@ -91,17 +60,14 @@ export class StructureValidator {
     const sd = this.loader.getResourceDefinition(resourceType);
 
     if (!sd) {
-      issues.push({
-        severity: "error",
-        path: "resourceType",
-        message: `Unknown resource type: "${resourceType}"`,
-        code: "UNKNOWN_RESOURCE_TYPE",
-      });
+      issues.push(
+        this.formatter.formatUnknownResourceType(resourceType, this.loader.getResourceNames()),
+      );
       return { valid: false, issues };
     }
 
     const elements = sd.snapshot?.element ?? [];
-    this.validateObject(obj, resourceType, elements, resourceType, issues);
+    this.validateObject(obj, resourceType, elements, resourceType, resourceType, issues);
 
     return {
       valid: issues.every((i) => i.severity !== "error"),
@@ -114,10 +80,24 @@ export class StructureValidator {
     fhirBasePath: string,
     elements: ElementDefinition[],
     jsonPath: string,
+    resourceType: string,
     issues: ValidationIssue[],
   ): void {
     const children = this.getDirectChildren(elements, fhirBasePath);
     const { choiceMap, choiceGroups } = this.resolveChoiceTypes(children);
+
+    // Build the list of valid property names for "did you mean?" suggestions
+    const validProperties = [
+      ...Array.from(children.keys()).filter((k) => !k.endsWith("[x]")),
+      ...Array.from(choiceMap.keys()),
+    ];
+
+    const ctx: PropertyContext = {
+      resourceType,
+      fhirPath: fhirBasePath,
+      jsonPath,
+      validProperties,
+    };
 
     // Unknown properties
     for (const key of Object.keys(obj)) {
@@ -127,35 +107,22 @@ export class StructureValidator {
       if (children.has(key)) continue;
       if (choiceMap.has(key)) continue;
 
-      issues.push({
-        severity: "error",
-        path: `${jsonPath}.${key}`,
-        message: `Unknown property "${key}"`,
-        code: "UNKNOWN_PROPERTY",
-      });
+      issues.push(this.formatter.formatUnknownProperty(key, ctx));
     }
 
     // Required fields
     for (const [propName, elDef] of children) {
       if ((elDef.min ?? 0) < 1) continue;
 
+      const fieldCtx: PropertyContext = { ...ctx, elementDef: elDef };
+
       // Regular required field
       if (!elDef.path.endsWith("[x]")) {
         const val = obj[propName];
         if (val === undefined || val === null) {
-          issues.push({
-            severity: "error",
-            path: `${jsonPath}.${propName}`,
-            message: `Missing required field "${propName}"`,
-            code: "REQUIRED_FIELD",
-          });
+          issues.push(this.formatter.formatRequiredField(propName, fieldCtx));
         } else if (Array.isArray(val) && val.length === 0) {
-          issues.push({
-            severity: "error",
-            path: `${jsonPath}.${propName}`,
-            message: `Required field "${propName}" must not be an empty array`,
-            code: "REQUIRED_FIELD",
-          });
+          issues.push(this.formatter.formatRequiredFieldEmptyArray(propName, fieldCtx));
         }
         continue;
       }
@@ -166,12 +133,7 @@ export class StructureValidator {
       if (!group) continue;
       const hasOne = group.some(({ concrete }) => obj[concrete] !== undefined && obj[concrete] !== null);
       if (!hasOne) {
-        issues.push({
-          severity: "error",
-          path: `${jsonPath}.${baseName}[x]`,
-          message: `Required choice type "${baseName}[x]" must have at least one variant present`,
-          code: "REQUIRED_FIELD",
-        });
+        issues.push(this.formatter.formatRequiredChoiceType(baseName, group, fieldCtx));
       }
     }
 
@@ -181,12 +143,13 @@ export class StructureValidator {
         ({ concrete }) => obj[concrete] !== undefined && obj[concrete] !== null,
       );
       if (presentVariants.length > 1) {
-        issues.push({
-          severity: "error",
-          path: `${jsonPath}.${baseName}[x]`,
-          message: `Choice type "${baseName}[x]" must have at most one variant, found: ${presentVariants.map((v) => v.concrete).join(", ")}`,
-          code: "CHOICE_TYPE_MULTIPLE",
-        });
+        issues.push(
+          this.formatter.formatChoiceTypeMultiple(
+            baseName,
+            presentVariants.map((v) => v.concrete),
+            ctx,
+          ),
+        );
       }
     }
 
@@ -197,14 +160,14 @@ export class StructureValidator {
       if (value === undefined || value === null) continue;
       const typeCode = elDef.type?.[0]?.code;
       if (!typeCode) continue;
-      this.validateProperty(value, elDef, typeCode, jsonPath, propName, elements, issues);
+      this.validateProperty(value, elDef, typeCode, jsonPath, propName, fhirBasePath, resourceType, elements, issues);
     }
 
     // Per choice-type property validation
     for (const [concrete, { elDef, typeCode }] of choiceMap) {
       const value = obj[concrete];
       if (value === undefined || value === null) continue;
-      this.validateProperty(value, elDef, typeCode, jsonPath, concrete, elements, issues);
+      this.validateProperty(value, elDef, typeCode, jsonPath, concrete, fhirBasePath, resourceType, elements, issues);
     }
   }
 
@@ -214,45 +177,46 @@ export class StructureValidator {
     resolvedTypeCode: string,
     jsonPath: string,
     propName: string,
+    fhirBasePath: string,
+    resourceType: string,
     elements: ElementDefinition[],
     issues: ValidationIssue[],
   ): void {
     const maxStr = elDef.max ?? "*";
     const isSingular = maxStr === "1" || maxStr === "0";
 
+    const propCtx: PropertyContext = {
+      resourceType,
+      fhirPath: fhirBasePath,
+      jsonPath,
+      elementDef: elDef,
+    };
+
     if (isSingular) {
       if (Array.isArray(value)) {
-        issues.push({
-          severity: "error",
-          path: `${jsonPath}.${propName}`,
-          message: `"${propName}" must not be an array (max cardinality is ${maxStr})`,
-          code: "CARDINALITY_ERROR",
-        });
+        issues.push(this.formatter.formatCardinalityArray(propName, maxStr, propCtx));
         return;
       }
-      this.validateSingleValue(value, elDef, resolvedTypeCode, `${jsonPath}.${propName}`, elements, issues);
+      this.validateSingleValue(value, elDef, resolvedTypeCode, `${jsonPath}.${propName}`, fhirBasePath, resourceType, elements, issues);
     } else {
       if (!Array.isArray(value)) {
-        issues.push({
-          severity: "error",
-          path: `${jsonPath}.${propName}`,
-          message: `"${propName}" must be an array (max cardinality is ${maxStr})`,
-          code: "CARDINALITY_ERROR",
-        });
+        issues.push(this.formatter.formatCardinalityScalar(propName, maxStr, propCtx));
         return;
       }
       for (let i = 0; i < value.length; i++) {
         const item = value[i];
         if (item === null || item === undefined) {
-          issues.push({
-            severity: "error",
-            path: `${jsonPath}.${propName}[${i}]`,
-            message: `Array element must not be null`,
-            code: "INVALID_TYPE",
-          });
+          issues.push(
+            this.formatter.formatNullArrayElement(i, {
+              resourceType,
+              fhirPath: `${fhirBasePath}.${propName}`,
+              jsonPath: `${jsonPath}.${propName}[${i}]`,
+              elementDef: elDef,
+            }),
+          );
           continue;
         }
-        this.validateSingleValue(item, elDef, resolvedTypeCode, `${jsonPath}.${propName}[${i}]`, elements, issues);
+        this.validateSingleValue(item, elDef, resolvedTypeCode, `${jsonPath}.${propName}[${i}]`, fhirBasePath, resourceType, elements, issues);
       }
     }
   }
@@ -262,6 +226,8 @@ export class StructureValidator {
     elDef: ElementDefinition,
     typeCode: string,
     valuePath: string,
+    fhirBasePath: string,
+    resourceType: string,
     elements: ElementDefinition[],
     issues: ValidationIssue[],
   ): void {
@@ -269,24 +235,28 @@ export class StructureValidator {
     if (PRIMITIVE_TYPES.has(typeCode)) {
       const err = validatePrimitive(typeCode, value);
       if (err) {
-        issues.push({
-          severity: "error",
-          path: valuePath,
-          message: err,
-          code: "INVALID_TYPE",
-        });
+        issues.push(
+          this.formatter.formatPrimitiveTypeError(err, typeCode, {
+            resourceType,
+            fhirPath: elDef.path,
+            jsonPath: valuePath,
+            elementDef: elDef,
+          }),
+        );
       }
       return;
     }
 
     // Complex / BackboneElement types — must be an object
     if (typeof value !== "object" || value === null || Array.isArray(value)) {
-      issues.push({
-        severity: "error",
-        path: valuePath,
-        message: `Expected object for type "${typeCode}", got ${Array.isArray(value) ? "array" : typeof value}`,
-        code: "INVALID_TYPE",
-      });
+      issues.push(
+        this.formatter.formatExpectedObject(typeCode, value, {
+          resourceType,
+          fhirPath: elDef.path,
+          jsonPath: valuePath,
+          elementDef: elDef,
+        }),
+      );
       return;
     }
 
@@ -296,14 +266,14 @@ export class StructureValidator {
     const inlinePath = elDef.path;
     const inlineChildren = this.getDirectChildren(elements, inlinePath);
     if (inlineChildren.size > 0) {
-      this.validateObject(obj, inlinePath, elements, valuePath, issues);
+      this.validateObject(obj, inlinePath, elements, valuePath, resourceType, issues);
       return;
     }
 
     // Fallback: load type StructureDefinition
     const typeSd = this.loader.getTypeDefinition(typeCode);
     if (typeSd?.snapshot?.element) {
-      this.validateObject(obj, typeCode, typeSd.snapshot.element, valuePath, issues);
+      this.validateObject(obj, typeCode, typeSd.snapshot.element, valuePath, resourceType, issues);
     }
   }
 
