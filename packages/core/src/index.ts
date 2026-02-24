@@ -6,6 +6,8 @@ export type {
 } from "./types.js";
 export { DefinitionLoader } from "./loader/index.js";
 export { StructureValidator } from "./structure/index.js";
+export { MessageFormatter } from "./messages/index.js";
+export type { PropertyContext } from "./messages/index.js";
 export type {
   StructureDefinition,
   ElementDefinition,
