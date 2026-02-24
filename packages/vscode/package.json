@@ -1,0 +1,37 @@
+{
+  "name": "fhir-validate-vscode",
+  "displayName": "FHIR Validate",
+  "description": "Real-time FHIR R4 resource validation for VSCode",
+  "version": "0.1.0",
+  "publisher": "fhir-validate",
+  "engines": {
+    "vscode": "^1.85.0"
+  },
+  "categories": ["Linters"],
+  "activationEvents": ["onLanguage:fhir-json"],
+  "main": "./dist/extension.js",
+  "contributes": {
+    "languages": [
+      {
+        "id": "fhir-json",
+        "extensions": [".fhir.json"],
+        "configuration": "./language-configuration.json"
+      }
+    ]
+  },
+  "scripts": {
+    "build": "node esbuild.mjs",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@fhir-validate/core": "workspace:*",
+    "vscode-languageclient": "^9.0.1",
+    "vscode-languageserver": "^9.0.1",
+    "vscode-languageserver-textdocument": "^1.0.12"
+  },
+  "devDependencies": {
+    "@types/vscode": "^1.85.0",
+    "esbuild": "^0.24.0",
+    "typescript": "^5.7.0"
+  }
+}

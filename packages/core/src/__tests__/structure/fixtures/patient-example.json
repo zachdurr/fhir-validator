@@ -1,0 +1,42 @@
+{
+  "resourceType": "Patient",
+  "id": "example-123",
+  "identifier": [
+    {
+      "system": "http://hospital.example.org/mrn",
+      "value": "MRN-12345"
+    }
+  ],
+  "active": true,
+  "name": [
+    {
+      "use": "official",
+      "family": "Smith",
+      "given": ["John", "Jacob"]
+    },
+    {
+      "use": "nickname",
+      "given": ["JJ"]
+    }
+  ],
+  "gender": "male",
+  "birthDate": "1990-06-15",
+  "contact": [
+    {
+      "name": {
+        "family": "Smith",
+        "given": ["Jane"]
+      },
+      "relationship": [
+        {
+          "coding": [
+            {
+              "system": "http://terminology.hl7.org/CodeSystem/v2-0131",
+              "code": "N"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

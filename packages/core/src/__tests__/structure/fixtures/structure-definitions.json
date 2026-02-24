@@ -1,0 +1,767 @@
+{
+  "definitions": [
+    {
+      "id": "Patient",
+      "url": "http://hl7.org/fhir/StructureDefinition/Patient",
+      "name": "Patient",
+      "type": "Patient",
+      "kind": "resource",
+      "abstract": false,
+      "baseDefinition": "http://hl7.org/fhir/StructureDefinition/DomainResource",
+      "derivation": "specialization",
+      "snapshot": {
+        "element": [
+          {
+            "id": "Patient",
+            "path": "Patient",
+            "min": 0,
+            "max": "*",
+            "short": "Information about a patient"
+          },
+          {
+            "id": "Patient.id",
+            "path": "Patient.id",
+            "min": 0,
+            "max": "1",
+            "type": [{ "code": "id" }],
+            "short": "Logical id"
+          },
+          {
+            "id": "Patient.active",
+            "path": "Patient.active",
+            "min": 0,
+            "max": "1",
+            "type": [{ "code": "boolean" }],
+            "short": "Whether patient record is active"
+          },
+          {
+            "id": "Patient.name",
+            "path": "Patient.name",
+            "min": 0,
+            "max": "*",
+            "type": [{ "code": "HumanName" }],
+            "short": "A name associated with the patient"
+          },
+          {
+            "id": "Patient.birthDate",
+            "path": "Patient.birthDate",
+            "min": 0,
+            "max": "1",
+            "type": [{ "code": "date" }],
+            "short": "Date of birth"
+          },
+          {
+            "id": "Patient.gender",
+            "path": "Patient.gender",
+            "min": 0,
+            "max": "1",
+            "type": [{ "code": "code" }],
+            "short": "male | female | other | unknown"
+          },
+          {
+            "id": "Patient.identifier",
+            "path": "Patient.identifier",
+            "min": 0,
+            "max": "*",
+            "type": [{ "code": "Identifier" }],
+            "short": "Patient identifiers"
+          },
+          {
+            "id": "Patient.contact",
+            "path": "Patient.contact",
+            "min": 0,
+            "max": "*",
+            "type": [{ "code": "BackboneElement" }],
+            "short": "Contact party for the patient"
+          },
+          {
+            "id": "Patient.contact.name",
+            "path": "Patient.contact.name",
+            "min": 0,
+            "max": "1",
+            "type": [{ "code": "HumanName" }],
+            "short": "Name of the contact person"
+          },
+          {
+            "id": "Patient.contact.relationship",
+            "path": "Patient.contact.relationship",
+            "min": 0,
+            "max": "*",
+            "type": [{ "code": "CodeableConcept" }],
+            "short": "The kind of relationship"
+          }
+        ]
+      }
+    },
+    {
+      "id": "Observation",
+      "url": "http://hl7.org/fhir/StructureDefinition/Observation",
+      "name": "Observation",
+      "type": "Observation",
+      "kind": "resource",
+      "abstract": false,
+      "baseDefinition": "http://hl7.org/fhir/StructureDefinition/DomainResource",
+      "derivation": "specialization",
+      "snapshot": {
+        "element": [
+          {
+            "id": "Observation",
+            "path": "Observation",
+            "min": 0,
+            "max": "*",
+            "short": "Measurements and simple assertions"
+          },
+          {
+            "id": "Observation.id",
+            "path": "Observation.id",
+            "min": 0,
+            "max": "1",
+            "type": [{ "code": "id" }],
+            "short": "Logical id"
+          },
+          {
+            "id": "Observation.status",
+            "path": "Observation.status",
+            "min": 1,
+            "max": "1",
+            "type": [{ "code": "code" }],
+            "short": "registered | preliminary | final | amended"
+          },
+          {
+            "id": "Observation.code",
+            "path": "Observation.code",
+            "min": 1,
+            "max": "1",
+            "type": [{ "code": "CodeableConcept" }],
+            "short": "Type of observation"
+          },
+          {
+            "id": "Observation.value[x]",
+            "path": "Observation.value[x]",
+            "min": 0,
+            "max": "1",
+            "type": [
+              { "code": "Quantity" },
+              { "code": "string" },
+              { "code": "boolean" },
+              { "code": "integer" }
+            ],
+            "short": "Actual result"
+          },
+          {
+            "id": "Observation.effective[x]",
+            "path": "Observation.effective[x]",
+            "min": 0,
+            "max": "1",
+            "type": [
+              { "code": "dateTime" },
+              { "code": "Period" }
+            ],
+            "short": "Clinically relevant time"
+          }
+        ]
+      }
+    },
+    {
+      "id": "MedicationRequest",
+      "url": "http://hl7.org/fhir/StructureDefinition/MedicationRequest",
+      "name": "MedicationRequest",
+      "type": "MedicationRequest",
+      "kind": "resource",
+      "abstract": false,
+      "baseDefinition": "http://hl7.org/fhir/StructureDefinition/DomainResource",
+      "derivation": "specialization",
+      "snapshot": {
+        "element": [
+          {
+            "id": "MedicationRequest",
+            "path": "MedicationRequest",
+            "min": 0,
+            "max": "*",
+            "short": "Ordering of medication"
+          },
+          {
+            "id": "MedicationRequest.id",
+            "path": "MedicationRequest.id",
+            "min": 0,
+            "max": "1",
+            "type": [{ "code": "id" }],
+            "short": "Logical id"
+          },
+          {
+            "id": "MedicationRequest.status",
+            "path": "MedicationRequest.status",
+            "min": 1,
+            "max": "1",
+            "type": [{ "code": "code" }],
+            "short": "active | on-hold | cancelled | completed"
+          },
+          {
+            "id": "MedicationRequest.intent",
+            "path": "MedicationRequest.intent",
+            "min": 1,
+            "max": "1",
+            "type": [{ "code": "code" }],
+            "short": "proposal | plan | order"
+          },
+          {
+            "id": "MedicationRequest.subject",
+            "path": "MedicationRequest.subject",
+            "min": 1,
+            "max": "1",
+            "type": [{ "code": "Reference" }],
+            "short": "Who the medication is for"
+          }
+        ]
+      }
+    },
+    {
+      "id": "HumanName",
+      "url": "http://hl7.org/fhir/StructureDefinition/HumanName",
+      "name": "HumanName",
+      "type": "HumanName",
+      "kind": "complex-type",
+      "abstract": false,
+      "snapshot": {
+        "element": [
+          {
+            "id": "HumanName",
+            "path": "HumanName",
+            "min": 0,
+            "max": "*",
+            "short": "Name of a human"
+          },
+          {
+            "id": "HumanName.use",
+            "path": "HumanName.use",
+            "min": 0,
+            "max": "1",
+            "type": [{ "code": "code" }],
+            "short": "usual | official | temp | nickname | anonymous | old | maiden"
+          },
+          {
+            "id": "HumanName.family",
+            "path": "HumanName.family",
+            "min": 0,
+            "max": "1",
+            "type": [{ "code": "string" }],
+            "short": "Family name"
+          },
+          {
+            "id": "HumanName.given",
+            "path": "HumanName.given",
+            "min": 0,
+            "max": "*",
+            "type": [{ "code": "string" }],
+            "short": "Given names"
+          },
+          {
+            "id": "HumanName.prefix",
+            "path": "HumanName.prefix",
+            "min": 0,
+            "max": "*",
+            "type": [{ "code": "string" }],
+            "short": "Parts that come before the name"
+          },
+          {
+            "id": "HumanName.suffix",
+            "path": "HumanName.suffix",
+            "min": 0,
+            "max": "*",
+            "type": [{ "code": "string" }],
+            "short": "Parts that come after the name"
+          },
+          {
+            "id": "HumanName.text",
+            "path": "HumanName.text",
+            "min": 0,
+            "max": "1",
+            "type": [{ "code": "string" }],
+            "short": "Text representation of the name"
+          },
+          {
+            "id": "HumanName.period",
+            "path": "HumanName.period",
+            "min": 0,
+            "max": "1",
+            "type": [{ "code": "Period" }],
+            "short": "Time period when name was in use"
+          }
+        ]
+      }
+    },
+    {
+      "id": "Identifier",
+      "url": "http://hl7.org/fhir/StructureDefinition/Identifier",
+      "name": "Identifier",
+      "type": "Identifier",
+      "kind": "complex-type",
+      "abstract": false,
+      "snapshot": {
+        "element": [
+          {
+            "id": "Identifier",
+            "path": "Identifier",
+            "min": 0,
+            "max": "*",
+            "short": "An identifier"
+          },
+          {
+            "id": "Identifier.use",
+            "path": "Identifier.use",
+            "min": 0,
+            "max": "1",
+            "type": [{ "code": "code" }],
+            "short": "usual | official | temp | secondary | old"
+          },
+          {
+            "id": "Identifier.system",
+            "path": "Identifier.system",
+            "min": 0,
+            "max": "1",
+            "type": [{ "code": "uri" }],
+            "short": "The namespace for the identifier value"
+          },
+          {
+            "id": "Identifier.value",
+            "path": "Identifier.value",
+            "min": 0,
+            "max": "1",
+            "type": [{ "code": "string" }],
+            "short": "The value"
+          }
+        ]
+      }
+    },
+    {
+      "id": "CodeableConcept",
+      "url": "http://hl7.org/fhir/StructureDefinition/CodeableConcept",
+      "name": "CodeableConcept",
+      "type": "CodeableConcept",
+      "kind": "complex-type",
+      "abstract": false,
+      "snapshot": {
+        "element": [
+          {
+            "id": "CodeableConcept",
+            "path": "CodeableConcept",
+            "min": 0,
+            "max": "*",
+            "short": "Concept"
+          },
+          {
+            "id": "CodeableConcept.coding",
+            "path": "CodeableConcept.coding",
+            "min": 0,
+            "max": "*",
+            "type": [{ "code": "Coding" }],
+            "short": "Code defined by a terminology system"
+          },
+          {
+            "id": "CodeableConcept.text",
+            "path": "CodeableConcept.text",
+            "min": 0,
+            "max": "1",
+            "type": [{ "code": "string" }],
+            "short": "Plain text representation"
+          }
+        ]
+      }
+    },
+    {
+      "id": "Coding",
+      "url": "http://hl7.org/fhir/StructureDefinition/Coding",
+      "name": "Coding",
+      "type": "Coding",
+      "kind": "complex-type",
+      "abstract": false,
+      "snapshot": {
+        "element": [
+          {
+            "id": "Coding",
+            "path": "Coding",
+            "min": 0,
+            "max": "*",
+            "short": "A reference to a code"
+          },
+          {
+            "id": "Coding.system",
+            "path": "Coding.system",
+            "min": 0,
+            "max": "1",
+            "type": [{ "code": "uri" }],
+            "short": "Identity of the terminology system"
+          },
+          {
+            "id": "Coding.code",
+            "path": "Coding.code",
+            "min": 0,
+            "max": "1",
+            "type": [{ "code": "code" }],
+            "short": "Symbol in syntax defined by the system"
+          },
+          {
+            "id": "Coding.display",
+            "path": "Coding.display",
+            "min": 0,
+            "max": "1",
+            "type": [{ "code": "string" }],
+            "short": "Representation defined by the system"
+          },
+          {
+            "id": "Coding.version",
+            "path": "Coding.version",
+            "min": 0,
+            "max": "1",
+            "type": [{ "code": "string" }],
+            "short": "Version of the system"
+          }
+        ]
+      }
+    },
+    {
+      "id": "Period",
+      "url": "http://hl7.org/fhir/StructureDefinition/Period",
+      "name": "Period",
+      "type": "Period",
+      "kind": "complex-type",
+      "abstract": false,
+      "snapshot": {
+        "element": [
+          {
+            "id": "Period",
+            "path": "Period",
+            "min": 0,
+            "max": "*",
+            "short": "Time range defined by start and end"
+          },
+          {
+            "id": "Period.start",
+            "path": "Period.start",
+            "min": 0,
+            "max": "1",
+            "type": [{ "code": "dateTime" }],
+            "short": "Starting time with inclusive boundary"
+          },
+          {
+            "id": "Period.end",
+            "path": "Period.end",
+            "min": 0,
+            "max": "1",
+            "type": [{ "code": "dateTime" }],
+            "short": "End time with inclusive boundary"
+          }
+        ]
+      }
+    },
+    {
+      "id": "Quantity",
+      "url": "http://hl7.org/fhir/StructureDefinition/Quantity",
+      "name": "Quantity",
+      "type": "Quantity",
+      "kind": "complex-type",
+      "abstract": false,
+      "snapshot": {
+        "element": [
+          {
+            "id": "Quantity",
+            "path": "Quantity",
+            "min": 0,
+            "max": "*",
+            "short": "A measured amount"
+          },
+          {
+            "id": "Quantity.value",
+            "path": "Quantity.value",
+            "min": 0,
+            "max": "1",
+            "type": [{ "code": "decimal" }],
+            "short": "Numerical value"
+          },
+          {
+            "id": "Quantity.unit",
+            "path": "Quantity.unit",
+            "min": 0,
+            "max": "1",
+            "type": [{ "code": "string" }],
+            "short": "Unit representation"
+          },
+          {
+            "id": "Quantity.system",
+            "path": "Quantity.system",
+            "min": 0,
+            "max": "1",
+            "type": [{ "code": "uri" }],
+            "short": "System that defines coded unit form"
+          },
+          {
+            "id": "Quantity.code",
+            "path": "Quantity.code",
+            "min": 0,
+            "max": "1",
+            "type": [{ "code": "code" }],
+            "short": "Coded form of the unit"
+          }
+        ]
+      }
+    },
+    {
+      "id": "Reference",
+      "url": "http://hl7.org/fhir/StructureDefinition/Reference",
+      "name": "Reference",
+      "type": "Reference",
+      "kind": "complex-type",
+      "abstract": false,
+      "snapshot": {
+        "element": [
+          {
+            "id": "Reference",
+            "path": "Reference",
+            "min": 0,
+            "max": "*",
+            "short": "A reference from one resource to another"
+          },
+          {
+            "id": "Reference.reference",
+            "path": "Reference.reference",
+            "min": 0,
+            "max": "1",
+            "type": [{ "code": "string" }],
+            "short": "Literal reference, Relative, internal or absolute URL"
+          },
+          {
+            "id": "Reference.type",
+            "path": "Reference.type",
+            "min": 0,
+            "max": "1",
+            "type": [{ "code": "uri" }],
+            "short": "Type the reference refers to"
+          },
+          {
+            "id": "Reference.display",
+            "path": "Reference.display",
+            "min": 0,
+            "max": "1",
+            "type": [{ "code": "string" }],
+            "short": "Text alternative for the resource"
+          }
+        ]
+      }
+    },
+    {
+      "id": "string",
+      "url": "http://hl7.org/fhir/StructureDefinition/string",
+      "name": "string",
+      "type": "string",
+      "kind": "primitive-type",
+      "abstract": false,
+      "snapshot": {
+        "element": [
+          {
+            "id": "string",
+            "path": "string",
+            "min": 0,
+            "max": "*",
+            "short": "Primitive Type string"
+          }
+        ]
+      }
+    },
+    {
+      "id": "boolean",
+      "url": "http://hl7.org/fhir/StructureDefinition/boolean",
+      "name": "boolean",
+      "type": "boolean",
+      "kind": "primitive-type",
+      "abstract": false,
+      "snapshot": {
+        "element": [
+          {
+            "id": "boolean",
+            "path": "boolean",
+            "min": 0,
+            "max": "*",
+            "short": "Primitive Type boolean"
+          }
+        ]
+      }
+    },
+    {
+      "id": "integer",
+      "url": "http://hl7.org/fhir/StructureDefinition/integer",
+      "name": "integer",
+      "type": "integer",
+      "kind": "primitive-type",
+      "abstract": false,
+      "snapshot": {
+        "element": [
+          {
+            "id": "integer",
+            "path": "integer",
+            "min": 0,
+            "max": "*",
+            "short": "Primitive Type integer"
+          }
+        ]
+      }
+    },
+    {
+      "id": "decimal",
+      "url": "http://hl7.org/fhir/StructureDefinition/decimal",
+      "name": "decimal",
+      "type": "decimal",
+      "kind": "primitive-type",
+      "abstract": false,
+      "snapshot": {
+        "element": [
+          {
+            "id": "decimal",
+            "path": "decimal",
+            "min": 0,
+            "max": "*",
+            "short": "Primitive Type decimal"
+          }
+        ]
+      }
+    },
+    {
+      "id": "code",
+      "url": "http://hl7.org/fhir/StructureDefinition/code",
+      "name": "code",
+      "type": "code",
+      "kind": "primitive-type",
+      "abstract": false,
+      "snapshot": {
+        "element": [
+          {
+            "id": "code",
+            "path": "code",
+            "min": 0,
+            "max": "*",
+            "short": "Primitive Type code"
+          }
+        ]
+      }
+    },
+    {
+      "id": "id",
+      "url": "http://hl7.org/fhir/StructureDefinition/id",
+      "name": "id",
+      "type": "id",
+      "kind": "primitive-type",
+      "abstract": false,
+      "snapshot": {
+        "element": [
+          {
+            "id": "id",
+            "path": "id",
+            "min": 0,
+            "max": "*",
+            "short": "Primitive Type id"
+          }
+        ]
+      }
+    },
+    {
+      "id": "date",
+      "url": "http://hl7.org/fhir/StructureDefinition/date",
+      "name": "date",
+      "type": "date",
+      "kind": "primitive-type",
+      "abstract": false,
+      "snapshot": {
+        "element": [
+          {
+            "id": "date",
+            "path": "date",
+            "min": 0,
+            "max": "*",
+            "short": "Primitive Type date"
+          }
+        ]
+      }
+    },
+    {
+      "id": "dateTime",
+      "url": "http://hl7.org/fhir/StructureDefinition/dateTime",
+      "name": "dateTime",
+      "type": "dateTime",
+      "kind": "primitive-type",
+      "abstract": false,
+      "snapshot": {
+        "element": [
+          {
+            "id": "dateTime",
+            "path": "dateTime",
+            "min": 0,
+            "max": "*",
+            "short": "Primitive Type dateTime"
+          }
+        ]
+      }
+    },
+    {
+      "id": "uri",
+      "url": "http://hl7.org/fhir/StructureDefinition/uri",
+      "name": "uri",
+      "type": "uri",
+      "kind": "primitive-type",
+      "abstract": false,
+      "snapshot": {
+        "element": [
+          {
+            "id": "uri",
+            "path": "uri",
+            "min": 0,
+            "max": "*",
+            "short": "Primitive Type uri"
+          }
+        ]
+      }
+    }
+  ],
+  "resources": {
+    "Patient": 0,
+    "Observation": 1,
+    "MedicationRequest": 2
+  },
+  "types": {
+    "HumanName": 3,
+    "Identifier": 4,
+    "CodeableConcept": 5,
+    "Coding": 6,
+    "Period": 7,
+    "Quantity": 8,
+    "Reference": 9,
+    "string": 10,
+    "boolean": 11,
+    "integer": 12,
+    "decimal": 13,
+    "code": 14,
+    "id": 15,
+    "date": 16,
+    "dateTime": 17,
+    "uri": 18
+  },
+  "byUrl": {
+    "http://hl7.org/fhir/StructureDefinition/Patient": 0,
+    "http://hl7.org/fhir/StructureDefinition/Observation": 1,
+    "http://hl7.org/fhir/StructureDefinition/MedicationRequest": 2,
+    "http://hl7.org/fhir/StructureDefinition/HumanName": 3,
+    "http://hl7.org/fhir/StructureDefinition/Identifier": 4,
+    "http://hl7.org/fhir/StructureDefinition/CodeableConcept": 5,
+    "http://hl7.org/fhir/StructureDefinition/Coding": 6,
+    "http://hl7.org/fhir/StructureDefinition/Period": 7,
+    "http://hl7.org/fhir/StructureDefinition/Quantity": 8,
+    "http://hl7.org/fhir/StructureDefinition/Reference": 9,
+    "http://hl7.org/fhir/StructureDefinition/string": 10,
+    "http://hl7.org/fhir/StructureDefinition/boolean": 11,
+    "http://hl7.org/fhir/StructureDefinition/integer": 12,
+    "http://hl7.org/fhir/StructureDefinition/decimal": 13,
+    "http://hl7.org/fhir/StructureDefinition/code": 14,
+    "http://hl7.org/fhir/StructureDefinition/id": 15,
+    "http://hl7.org/fhir/StructureDefinition/date": 16,
+    "http://hl7.org/fhir/StructureDefinition/dateTime": 17,
+    "http://hl7.org/fhir/StructureDefinition/uri": 18
+  }
+}

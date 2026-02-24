@@ -1,0 +1,101 @@
+{
+  "definitions": [
+    {
+      "id": "TestPatient",
+      "url": "http://test.fhir.org/StructureDefinition/TestPatient",
+      "name": "TestPatient",
+      "type": "TestPatient",
+      "kind": "resource",
+      "abstract": false,
+      "baseDefinition": "http://hl7.org/fhir/StructureDefinition/DomainResource",
+      "derivation": "specialization",
+      "snapshot": {
+        "element": [
+          {
+            "id": "TestPatient",
+            "path": "TestPatient",
+            "min": 0,
+            "max": "*",
+            "short": "A test patient resource"
+          },
+          {
+            "id": "TestPatient.name",
+            "path": "TestPatient.name",
+            "min": 0,
+            "max": "*",
+            "short": "Patient name",
+            "type": [{ "code": "HumanName" }]
+          },
+          {
+            "id": "TestPatient.active",
+            "path": "TestPatient.active",
+            "min": 0,
+            "max": "1",
+            "short": "Whether patient is active",
+            "type": [{ "code": "boolean" }]
+          }
+        ]
+      }
+    },
+    {
+      "id": "TestString",
+      "url": "http://test.fhir.org/StructureDefinition/TestString",
+      "name": "TestString",
+      "type": "TestString",
+      "kind": "primitive-type",
+      "abstract": false,
+      "snapshot": {
+        "element": [
+          {
+            "id": "TestString",
+            "path": "TestString",
+            "min": 0,
+            "max": "*",
+            "short": "A test string type"
+          }
+        ]
+      }
+    },
+    {
+      "id": "TestQuantity",
+      "url": "http://test.fhir.org/StructureDefinition/TestQuantity",
+      "name": "TestQuantity",
+      "type": "TestQuantity",
+      "kind": "complex-type",
+      "abstract": false,
+      "snapshot": {
+        "element": [
+          {
+            "id": "TestQuantity",
+            "path": "TestQuantity",
+            "min": 0,
+            "max": "*",
+            "short": "A test quantity type"
+          },
+          {
+            "id": "TestQuantity.value",
+            "path": "TestQuantity.value",
+            "min": 0,
+            "max": "1",
+            "type": [{ "code": "decimal" }],
+            "binding": {
+              "strength": "example"
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "resources": {
+    "TestPatient": 0
+  },
+  "types": {
+    "TestString": 1,
+    "TestQuantity": 2
+  },
+  "byUrl": {
+    "http://test.fhir.org/StructureDefinition/TestPatient": 0,
+    "http://test.fhir.org/StructureDefinition/TestString": 1,
+    "http://test.fhir.org/StructureDefinition/TestQuantity": 2
+  }
+}
