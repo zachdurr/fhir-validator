@@ -7,8 +7,8 @@
   "engines": {
     "vscode": "^1.85.0"
   },
-  "categories": ["Linters"],
-  "activationEvents": ["onLanguage:fhir-json"],
+  "categories": ["Linters", "Programming Languages"],
+  "activationEvents": ["onLanguage:fhir-json", "onLanguage:json"],
   "main": "./dist/extension.js",
   "contributes": {
     "languages": [
@@ -17,10 +17,37 @@
         "extensions": [".fhir.json"],
         "configuration": "./language-configuration.json"
       }
+    ],
+    "configuration": {
+      "title": "FHIR Validate",
+      "properties": {
+        "fhir-validate.enabled": {
+          "type": "boolean",
+          "default": true,
+          "description": "Enable or disable FHIR validation"
+        },
+        "fhir-validate.severity.unknownProperties": {
+          "type": "string",
+          "default": "warning",
+          "enum": ["error", "warning", "info"],
+          "description": "Severity level for unknown properties in FHIR resources"
+        }
+      }
+    },
+    "commands": [
+      {
+        "command": "fhir-validate.validateDocument",
+        "title": "FHIR: Validate Document"
+      },
+      {
+        "command": "fhir-validate.showResourceInfo",
+        "title": "FHIR: Show Resource Info"
+      }
     ]
   },
   "scripts": {
     "build": "node esbuild.mjs",
+    "test": "vitest run",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
@@ -32,6 +59,7 @@
   "devDependencies": {
     "@types/vscode": "^1.85.0",
     "esbuild": "^0.24.0",
-    "typescript": "^5.7.0"
+    "typescript": "^5.7.0",
+    "vitest": "^2.1.0"
   }
 }
