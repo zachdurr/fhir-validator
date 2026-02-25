@@ -1,0 +1,10 @@
+{
+  "resourceType": "Patient",
+  "nmae": [
+    {
+      "family": "Smith"
+    }
+  ],
+  "actve": true,
+  "gnder": "male"
+}

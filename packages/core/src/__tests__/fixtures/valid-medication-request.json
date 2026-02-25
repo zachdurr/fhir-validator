@@ -1,0 +1,10 @@
+{
+  "resourceType": "MedicationRequest",
+  "id": "medrx-001",
+  "status": "active",
+  "intent": "order",
+  "subject": {
+    "reference": "Patient/pat-001",
+    "display": "Maria Rodriguez"
+  }
+}

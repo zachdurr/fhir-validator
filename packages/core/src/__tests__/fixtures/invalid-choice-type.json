@@ -1,0 +1,9 @@
+{
+  "resourceType": "Observation",
+  "status": "final",
+  "code": {
+    "text": "Test"
+  },
+  "valueString": "some text",
+  "valueInteger": 42
+}

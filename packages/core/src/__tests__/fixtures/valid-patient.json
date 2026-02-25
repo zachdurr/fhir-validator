@@ -1,0 +1,50 @@
+{
+  "resourceType": "Patient",
+  "id": "pat-001",
+  "identifier": [
+    {
+      "use": "official",
+      "system": "http://hospital.example.org/mrn",
+      "value": "MRN-98765"
+    },
+    {
+      "system": "http://hl7.org/fhir/sid/us-ssn",
+      "value": "999-88-7777"
+    }
+  ],
+  "active": true,
+  "name": [
+    {
+      "use": "official",
+      "family": "Rodriguez",
+      "given": ["Maria", "Elena"],
+      "prefix": ["Dr."]
+    },
+    {
+      "use": "nickname",
+      "given": ["Mari"]
+    }
+  ],
+  "gender": "female",
+  "birthDate": "1985-03-22",
+  "contact": [
+    {
+      "name": {
+        "family": "Rodriguez",
+        "given": ["Carlos"]
+      },
+      "relationship": [
+        {
+          "coding": [
+            {
+              "system": "http://terminology.hl7.org/CodeSystem/v2-0131",
+              "code": "N",
+              "display": "Next-of-Kin"
+            }
+          ],
+          "text": "Spouse"
+        }
+      ]
+    }
+  ]
+}

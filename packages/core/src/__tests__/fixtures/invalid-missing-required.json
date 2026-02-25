@@ -1,0 +1,8 @@
+{
+  "resourceType": "Observation",
+  "id": "obs-invalid-001",
+  "valueQuantity": {
+    "value": 98.6,
+    "unit": "F"
+  }
+}
