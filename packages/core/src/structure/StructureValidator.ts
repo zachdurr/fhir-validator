@@ -39,7 +39,12 @@ export class StructureValidator {
   validate(resource: unknown): ValidationResult {
     const issues: ValidationIssue[] = [];
 
-    if (resource === null || resource === undefined || Array.isArray(resource) || typeof resource !== "object") {
+    if (
+      resource === null ||
+      resource === undefined ||
+      Array.isArray(resource) ||
+      typeof resource !== "object"
+    ) {
       issues.push(this.formatter.formatInvalidResource(resource));
       return { valid: false, issues };
     }
@@ -131,7 +136,9 @@ export class StructureValidator {
       const baseName = propName.replace("[x]", "");
       const group = choiceGroups.get(baseName);
       if (!group) continue;
-      const hasOne = group.some(({ concrete }) => obj[concrete] !== undefined && obj[concrete] !== null);
+      const hasOne = group.some(
+        ({ concrete }) => obj[concrete] !== undefined && obj[concrete] !== null,
+      );
       if (!hasOne) {
         issues.push(this.formatter.formatRequiredChoiceType(baseName, group, fieldCtx));
       }
@@ -160,14 +167,34 @@ export class StructureValidator {
       if (value === undefined || value === null) continue;
       const typeCode = elDef.type?.[0]?.code;
       if (!typeCode) continue;
-      this.validateProperty(value, elDef, typeCode, jsonPath, propName, fhirBasePath, resourceType, elements, issues);
+      this.validateProperty(
+        value,
+        elDef,
+        typeCode,
+        jsonPath,
+        propName,
+        fhirBasePath,
+        resourceType,
+        elements,
+        issues,
+      );
     }
 
     // Per choice-type property validation
     for (const [concrete, { elDef, typeCode }] of choiceMap) {
       const value = obj[concrete];
       if (value === undefined || value === null) continue;
-      this.validateProperty(value, elDef, typeCode, jsonPath, concrete, fhirBasePath, resourceType, elements, issues);
+      this.validateProperty(
+        value,
+        elDef,
+        typeCode,
+        jsonPath,
+        concrete,
+        fhirBasePath,
+        resourceType,
+        elements,
+        issues,
+      );
     }
   }
 
@@ -197,7 +224,16 @@ export class StructureValidator {
         issues.push(this.formatter.formatCardinalityArray(propName, maxStr, propCtx));
         return;
       }
-      this.validateSingleValue(value, elDef, resolvedTypeCode, `${jsonPath}.${propName}`, fhirBasePath, resourceType, elements, issues);
+      this.validateSingleValue(
+        value,
+        elDef,
+        resolvedTypeCode,
+        `${jsonPath}.${propName}`,
+        fhirBasePath,
+        resourceType,
+        elements,
+        issues,
+      );
     } else {
       if (!Array.isArray(value)) {
         issues.push(this.formatter.formatCardinalityScalar(propName, maxStr, propCtx));
@@ -216,7 +252,16 @@ export class StructureValidator {
           );
           continue;
         }
-        this.validateSingleValue(item, elDef, resolvedTypeCode, `${jsonPath}.${propName}[${i}]`, fhirBasePath, resourceType, elements, issues);
+        this.validateSingleValue(
+          item,
+          elDef,
+          resolvedTypeCode,
+          `${jsonPath}.${propName}[${i}]`,
+          fhirBasePath,
+          resourceType,
+          elements,
+          issues,
+        );
       }
     }
   }
@@ -307,9 +352,7 @@ export class StructureValidator {
    * - choiceMap: concrete prop name → { elDef, typeCode } (for lookup during property validation)
    * - choiceGroups: base name → array of { concrete, typeCode } (for multi-variant checking)
    */
-  private resolveChoiceTypes(
-    children: Map<string, ElementDefinition>,
-  ): {
+  private resolveChoiceTypes(children: Map<string, ElementDefinition>): {
     choiceMap: Map<string, { elDef: ElementDefinition; typeCode: string }>;
     choiceGroups: Map<string, { concrete: string; typeCode: string }[]>;
   } {

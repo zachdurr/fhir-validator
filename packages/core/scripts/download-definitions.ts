@@ -17,11 +17,7 @@ const FILES_TO_DOWNLOAD = [
   { name: "valuesets.json", extract: false },
 ] as const;
 
-async function fetchWithRetry(
-  url: string,
-  retries = 3,
-  delayMs = 1000,
-): Promise<Response> {
+async function fetchWithRetry(url: string, retries = 3, delayMs = 1000): Promise<Response> {
   for (let attempt = 1; attempt <= retries; attempt++) {
     try {
       console.log(`  Fetching ${url} (attempt ${attempt}/${retries})...`);
@@ -81,9 +77,7 @@ function trimElementDefinition(el: Record<string, unknown>): ElementDefinition {
   return trimmed;
 }
 
-function trimStructureDefinition(
-  sd: Record<string, unknown>,
-): StructureDefinition {
+function trimStructureDefinition(sd: Record<string, unknown>): StructureDefinition {
   const trimmed: Record<string, unknown> = {
     id: sd.id,
     url: sd.url,
@@ -117,9 +111,7 @@ function validateBundle(data: unknown, filename: string): FhirBundle {
   }
   const obj = data as Record<string, unknown>;
   if (obj.resourceType !== "Bundle") {
-    throw new Error(
-      `${filename}: Expected resourceType "Bundle", got "${obj.resourceType}"`,
-    );
+    throw new Error(`${filename}: Expected resourceType "Bundle", got "${obj.resourceType}"`);
   }
   if (!Array.isArray(obj.entry)) {
     throw new Error(`${filename}: Missing or invalid "entry" array`);
@@ -180,10 +172,7 @@ async function main() {
 
       if (trimmed.kind === "resource") {
         resources[trimmed.type] = index;
-      } else if (
-        trimmed.kind === "primitive-type" ||
-        trimmed.kind === "complex-type"
-      ) {
+      } else if (trimmed.kind === "primitive-type" || trimmed.kind === "complex-type") {
         types[trimmed.type] = index;
       }
 

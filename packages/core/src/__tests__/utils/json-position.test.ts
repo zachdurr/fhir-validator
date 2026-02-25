@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { resolveJsonPosition } from "../../utils/json-position";
+import { resolveJsonPosition } from "../../utils/json-position.js";
 
 describe("resolveJsonPosition", () => {
   describe("empty path", () => {
@@ -216,15 +216,15 @@ describe("resolveJsonPosition", () => {
   describe("deeply nested paths", () => {
     it("resolves three levels deep", () => {
       const json = `{
-  "resourceType": "Patient",
-  "contact": [
-    {
-      "name": {
-        "family": "Guardian"
-      }
-    }
-  ]
-}`;
+        "resourceType": "Patient",
+        "contact": [
+          {
+            "name": {
+              "family": "Guardian"
+            }
+          }
+        ]
+      }`;
       const pos = resolveJsonPosition(json, "Patient.contact[0].name.family");
       expect(pos).toBeDefined();
       expect(pos!.line).toBe(5);

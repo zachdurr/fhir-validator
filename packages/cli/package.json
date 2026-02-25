@@ -5,7 +5,9 @@
   "bin": {
     "fhir-validate": "./dist/index.js"
   },
-  "files": ["dist"],
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "build": "tsup",
     "test": "vitest run",

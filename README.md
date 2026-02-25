@@ -9,11 +9,11 @@ Offline, fast, TypeScript-native FHIR R4 structural validator. Available as a li
 
 ## Packages
 
-| Package | Description | npm |
-|---------|-------------|-----|
-| [`@fhir-validate/core`](./packages/core) | Core validation engine | `npm i @fhir-validate/core` |
-| [`@fhir-validate/cli`](./packages/cli) | Command-line interface | `npm i -g @fhir-validate/cli` |
-| [`fhir-validate-vscode`](./packages/vscode) | VS Code extension | Marketplace |
+| Package                                     | Description            | npm                           |
+| ------------------------------------------- | ---------------------- | ----------------------------- |
+| [`@fhir-validate/core`](./packages/core)    | Core validation engine | `npm i @fhir-validate/core`   |
+| [`@fhir-validate/cli`](./packages/cli)      | Command-line interface | `npm i -g @fhir-validate/cli` |
+| [`fhir-validate-vscode`](./packages/vscode) | VS Code extension      | Marketplace                   |
 
 ## Quick Start
 
@@ -89,17 +89,18 @@ Options:
 
 ### Exit Codes
 
-| Code | Meaning |
-|------|---------|
-| `0` | No validation errors |
-| `1` | Validation errors found (or warnings with `--strict`) |
-| `2` | CLI usage error (bad arguments, no files matched) |
+| Code | Meaning                                               |
+| ---- | ----------------------------------------------------- |
+| `0`  | No validation errors                                  |
+| `1`  | Validation errors found (or warnings with `--strict`) |
+| `2`  | CLI usage error (bad arguments, no files matched)     |
 
 ## VS Code Extension
 
 Install `fhir-validate-vscode` from the VS Code Marketplace.
 
 **Features:**
+
 - Real-time validation as you type (300ms debounce)
 - Diagnostics with error codes, details, and FHIR spec links
 - Status bar showing detected resource type (e.g., "FHIR: Patient")
@@ -107,32 +108,33 @@ Install `fhir-validate-vscode` from the VS Code Marketplace.
 - Works with any `.json` file containing a FHIR resource
 
 **Settings:**
+
 - `fhir-validate.enabled` — toggle validation on/off (default: `true`)
 - `fhir-validate.severity.unknownProperties` — severity for unknown properties: `error`, `warning`, `info` (default: `warning`)
 
 ## Error Codes
 
-| Code | Severity | Description |
-|------|----------|-------------|
-| `INVALID_RESOURCE` | error | Input is not a non-null JSON object |
-| `MISSING_RESOURCE_TYPE` | error | Missing `resourceType` field |
-| `INVALID_RESOURCE_TYPE` | error | `resourceType` is not a non-empty string |
-| `UNKNOWN_RESOURCE_TYPE` | error | Resource type not in FHIR R4 (with did-you-mean suggestion) |
-| `UNKNOWN_PROPERTY` | error | Property not defined on the resource type (with did-you-mean) |
-| `REQUIRED_FIELD` | error | Required field missing, null, or empty array |
-| `CARDINALITY_ERROR` | error | Array where scalar expected, or scalar where array expected |
-| `INVALID_TYPE` | error | Value doesn't match the expected FHIR primitive type |
-| `CHOICE_TYPE_MULTIPLE` | error | Multiple choice type variants present (e.g., both `valueString` and `valueInteger`) |
+| Code                    | Severity | Description                                                                         |
+| ----------------------- | -------- | ----------------------------------------------------------------------------------- |
+| `INVALID_RESOURCE`      | error    | Input is not a non-null JSON object                                                 |
+| `MISSING_RESOURCE_TYPE` | error    | Missing `resourceType` field                                                        |
+| `INVALID_RESOURCE_TYPE` | error    | `resourceType` is not a non-empty string                                            |
+| `UNKNOWN_RESOURCE_TYPE` | error    | Resource type not in FHIR R4 (with did-you-mean suggestion)                         |
+| `UNKNOWN_PROPERTY`      | error    | Property not defined on the resource type (with did-you-mean)                       |
+| `REQUIRED_FIELD`        | error    | Required field missing, null, or empty array                                        |
+| `CARDINALITY_ERROR`     | error    | Array where scalar expected, or scalar where array expected                         |
+| `INVALID_TYPE`          | error    | Value doesn't match the expected FHIR primitive type                                |
+| `CHOICE_TYPE_MULTIPLE`  | error    | Multiple choice type variants present (e.g., both `valueString` and `valueInteger`) |
 
 ## Comparison
 
-| Feature | fhir-validate | HAPI FHIR Validator | HL7 Validator |
-|---------|--------------|---------------------|---------------|
-| Language | TypeScript | Java | Java |
-| Offline | Yes | Yes | Requires terminology server |
-| Startup time | ~50ms | ~5s | ~10s |
-| Installation | `npm install` | Maven/JAR | JAR download |
-| VS Code integration | Built-in | No | No |
+| Feature             | fhir-validate | HAPI FHIR Validator | HL7 Validator               |
+| ------------------- | ------------- | ------------------- | --------------------------- |
+| Language            | TypeScript    | Java                | Java                        |
+| Offline             | Yes           | Yes                 | Requires terminology server |
+| Startup time        | ~50ms         | ~5s                 | ~10s                        |
+| Installation        | `npm install` | Maven/JAR           | JAR download                |
+| VS Code integration | Built-in      | No                  | No                          |
 
 ## Roadmap
 

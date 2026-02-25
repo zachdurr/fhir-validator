@@ -3,10 +3,7 @@ import { validateFile } from "./validate.js";
 import { formatText } from "./formatters/index.js";
 import type { CliOptions } from "./types.js";
 
-export function startWatch(
-  patterns: string[],
-  options: CliOptions,
-): void {
+export function startWatch(patterns: string[], options: CliOptions): void {
   const watcher = chokidarWatch(patterns, {
     persistent: true,
     ignoreInitial: false,

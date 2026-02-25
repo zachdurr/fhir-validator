@@ -28,25 +28,19 @@ beforeAll(() => {
 
 describe("validateFile", () => {
   it("returns valid for a correct Patient resource", async () => {
-    const result = await validateFile(
-      resolve(FIXTURES, "valid-patient.fhir.json"),
-    );
+    const result = await validateFile(resolve(FIXTURES, "valid-patient.fhir.json"));
     expect(result.valid).toBe(true);
     expect(result.issues).toHaveLength(0);
     expect(result.parseError).toBeUndefined();
   });
 
   it("returns issues for an invalid Patient resource", async () => {
-    const result = await validateFile(
-      resolve(FIXTURES, "invalid-patient.fhir.json"),
-    );
+    const result = await validateFile(resolve(FIXTURES, "invalid-patient.fhir.json"));
     expect(result.valid).toBe(false);
     expect(result.issues.length).toBeGreaterThan(0);
 
     // Should contain UNKNOWN_PROPERTY for unknownField
-    const unknown = result.issues.find(
-      (i) => i.issue.code === "UNKNOWN_PROPERTY",
-    );
+    const unknown = result.issues.find((i) => i.issue.code === "UNKNOWN_PROPERTY");
     expect(unknown).toBeDefined();
   });
 
@@ -58,14 +52,8 @@ describe("validateFile", () => {
   });
 
   it("filters by severity", async () => {
-    const allResult = await validateFile(
-      resolve(FIXTURES, "invalid-patient.fhir.json"),
-      "info",
-    );
-    const errorsOnly = await validateFile(
-      resolve(FIXTURES, "invalid-patient.fhir.json"),
-      "error",
-    );
+    const allResult = await validateFile(resolve(FIXTURES, "invalid-patient.fhir.json"), "info");
+    const errorsOnly = await validateFile(resolve(FIXTURES, "invalid-patient.fhir.json"), "error");
     // Errors-only should have fewer or equal issues than all
     expect(errorsOnly.issues.length).toBeLessThanOrEqual(allResult.issues.length);
     // All issues in errorsOnly should be errors
@@ -75,18 +63,12 @@ describe("validateFile", () => {
   });
 
   it("respects maxIssues limit", async () => {
-    const result = await validateFile(
-      resolve(FIXTURES, "invalid-patient.fhir.json"),
-      "info",
-      1,
-    );
+    const result = await validateFile(resolve(FIXTURES, "invalid-patient.fhir.json"), "info", 1);
     expect(result.issues.length).toBeLessThanOrEqual(1);
   });
 
   it("resolves positions for issues", async () => {
-    const result = await validateFile(
-      resolve(FIXTURES, "invalid-patient.fhir.json"),
-    );
+    const result = await validateFile(resolve(FIXTURES, "invalid-patient.fhir.json"));
     // At least some issues should have positions
     const withPositions = result.issues.filter((i) => i.position !== undefined);
     expect(withPositions.length).toBeGreaterThan(0);

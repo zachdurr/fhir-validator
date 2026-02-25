@@ -51,8 +51,10 @@ export function formatText(results: FileResult[], quiet: boolean): string {
     const total = totalErrors + totalWarnings + totalInfos;
     if (total > 0) {
       const parts: string[] = [];
-      if (totalErrors > 0) parts.push(chalk.red(`${totalErrors} error${totalErrors !== 1 ? "s" : ""}`));
-      if (totalWarnings > 0) parts.push(chalk.yellow(`${totalWarnings} warning${totalWarnings !== 1 ? "s" : ""}`));
+      if (totalErrors > 0)
+        parts.push(chalk.red(`${totalErrors} error${totalErrors !== 1 ? "s" : ""}`));
+      if (totalWarnings > 0)
+        parts.push(chalk.yellow(`${totalWarnings} warning${totalWarnings !== 1 ? "s" : ""}`));
       if (totalInfos > 0) parts.push(chalk.blue(`${totalInfos} info`));
 
       const icon = totalErrors > 0 ? chalk.red("\u2716") : chalk.yellow("\u26A0");

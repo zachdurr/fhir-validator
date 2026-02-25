@@ -1,6 +1,12 @@
 import { resolve } from "node:path";
 import { describe, it, expect } from "vitest";
-import { DefinitionLoader, StructureValidator, resolveJsonPosition, type ValidationIssue, type JsonPosition } from "@fhir-validate/core";
+import {
+  DefinitionLoader,
+  StructureValidator,
+  resolveJsonPosition,
+  type ValidationIssue,
+  type JsonPosition,
+} from "@fhir-validate/core";
 
 // Use the test fixture from core (Patient, Observation, MedicationRequest + types)
 const FIXTURE_PATH = resolve(
@@ -136,9 +142,7 @@ describe("validation pipeline integration", () => {
   "active": [true, false]
 }`;
     const diagnostics = validateAndResolve(json);
-    const cardError = diagnostics.find(
-      (d) => d.issue.code === "CARDINALITY_ERROR",
-    );
+    const cardError = diagnostics.find((d) => d.issue.code === "CARDINALITY_ERROR");
     expect(cardError).toBeDefined();
   });
 

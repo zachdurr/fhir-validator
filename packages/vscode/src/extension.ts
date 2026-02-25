@@ -37,12 +37,7 @@ export function activate(context: ExtensionContext): void {
     },
   };
 
-  client = new LanguageClient(
-    "fhirValidate",
-    "FHIR Validate",
-    serverOptions,
-    clientOptions,
-  );
+  client = new LanguageClient("fhirValidate", "FHIR Validate", serverOptions, clientOptions);
 
   // Status bar
   statusBarItem = window.createStatusBarItem(StatusBarAlignment.Right, 100);
@@ -50,9 +45,7 @@ export function activate(context: ExtensionContext): void {
   context.subscriptions.push(statusBarItem);
 
   // Update status bar on active editor change
-  context.subscriptions.push(
-    window.onDidChangeActiveTextEditor(updateStatusBar),
-  );
+  context.subscriptions.push(window.onDidChangeActiveTextEditor(updateStatusBar));
   context.subscriptions.push(
     workspace.onDidChangeTextDocument((e) => {
       if (window.activeTextEditor?.document === e.document) {

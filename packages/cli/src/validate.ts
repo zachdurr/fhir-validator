@@ -1,10 +1,6 @@
 import { readFile } from "node:fs/promises";
 import { resolve } from "node:path";
-import {
-  DefinitionLoader,
-  StructureValidator,
-  resolveJsonPosition,
-} from "@fhir-validate/core";
+import { DefinitionLoader, StructureValidator, resolveJsonPosition } from "@fhir-validate/core";
 import type { FileResult, ResolvedIssue } from "./types.js";
 import { SEVERITY_RANK } from "./types.js";
 
@@ -93,9 +89,7 @@ function processContent(
   }
 
   const minRank = SEVERITY_RANK[minSeverity] ?? 2;
-  const filtered = result.issues.filter(
-    (issue) => (SEVERITY_RANK[issue.severity] ?? 2) <= minRank,
-  );
+  const filtered = result.issues.filter((issue) => (SEVERITY_RANK[issue.severity] ?? 2) <= minRank);
 
   const limited = maxIssues > 0 ? filtered.slice(0, maxIssues) : filtered;
 

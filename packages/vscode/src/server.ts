@@ -238,9 +238,7 @@ function mapSeverity(issue: ValidationIssue): DiagnosticSeverity {
   return severityFromString(issue.severity);
 }
 
-function severityFromString(
-  sev: "error" | "warning" | "info",
-): DiagnosticSeverity {
+function severityFromString(sev: "error" | "warning" | "info"): DiagnosticSeverity {
   switch (sev) {
     case "error":
       return DiagnosticSeverity.Error;

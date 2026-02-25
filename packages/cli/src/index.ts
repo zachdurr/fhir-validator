@@ -17,11 +17,16 @@ program
   .option("-s, --strict", "treat warnings as errors", false)
   .option("--severity <level>", "minimum severity to report (error, warning, info)", "info")
   .option("--quiet", "suppress summary line", false)
-  .option("--max-issues <n>", "max issues per file (0 = unlimited)", (v) => {
-    const n = parseInt(v, 10);
-    if (isNaN(n) || n < 0) throw new InvalidArgumentError("Must be a non-negative integer.");
-    return n;
-  }, 0)
+  .option(
+    "--max-issues <n>",
+    "max issues per file (0 = unlimited)",
+    (v) => {
+      const n = parseInt(v, 10);
+      if (isNaN(n) || n < 0) throw new InvalidArgumentError("Must be a non-negative integer.");
+      return n;
+    },
+    0,
+  )
   .option("--stdin", "read JSON from stdin", false)
   .option("-w, --watch", "watch files for changes", false)
   .action(async (files: string[], opts: Record<string, unknown>) => {
@@ -102,12 +107,8 @@ function outputResults(results: FileResult[], options: CliOptions): void {
   }
 
   // Determine exit code
-  const hasErrors = results.some(
-    (r) => !r.valid || r.parseError,
-  );
-  const hasWarnings = results.some((r) =>
-    r.issues.some((i) => i.issue.severity === "warning"),
-  );
+  const hasErrors = results.some((r) => !r.valid || r.parseError);
+  const hasWarnings = results.some((r) => r.issues.some((i) => i.issue.severity === "warning"));
 
   if (hasErrors) {
     process.exit(1);

@@ -60,9 +60,7 @@ describe("DefinitionLoader", () => {
   describe("getDefinitionByUrl", () => {
     it("returns a StructureDefinition by canonical URL", () => {
       const loader = new DefinitionLoader(FIXTURE_PATH);
-      const sd = loader.getDefinitionByUrl(
-        "http://test.fhir.org/StructureDefinition/TestPatient",
-      );
+      const sd = loader.getDefinitionByUrl("http://test.fhir.org/StructureDefinition/TestPatient");
       expect(sd).toBeDefined();
       expect(sd!.id).toBe("TestPatient");
     });

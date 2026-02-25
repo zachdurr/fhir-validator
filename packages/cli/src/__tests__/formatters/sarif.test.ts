@@ -88,11 +88,21 @@ describe("formatSarif", () => {
   it("deduplicates rules", () => {
     const issues: ResolvedIssue[] = [
       {
-        issue: { severity: "warning", path: "Patient.foo", message: "Unknown foo", code: "UNKNOWN_PROPERTY" },
+        issue: {
+          severity: "warning",
+          path: "Patient.foo",
+          message: "Unknown foo",
+          code: "UNKNOWN_PROPERTY",
+        },
         position: { line: 0, startChar: 0, endChar: 1 },
       },
       {
-        issue: { severity: "warning", path: "Patient.bar", message: "Unknown bar", code: "UNKNOWN_PROPERTY" },
+        issue: {
+          severity: "warning",
+          path: "Patient.bar",
+          message: "Unknown bar",
+          code: "UNKNOWN_PROPERTY",
+        },
         position: { line: 1, startChar: 0, endChar: 1 },
       },
     ];
@@ -108,7 +118,11 @@ describe("formatSarif", () => {
       issue: { severity: "error", path: "Patient.id", message: "Bad", code: "E1" },
       position: { line: 0, startChar: 0, endChar: 1 },
     };
-    const result = makeResult({ valid: false, filePath: "/path/to/test.fhir.json", issues: [issue] });
+    const result = makeResult({
+      valid: false,
+      filePath: "/path/to/test.fhir.json",
+      issues: [issue],
+    });
     const parsed = JSON.parse(formatSarif([result]));
     const uri = parsed.runs[0].results[0].locations[0].physicalLocation.artifactLocation.uri;
     expect(uri).toMatch(/^file:\/\//);

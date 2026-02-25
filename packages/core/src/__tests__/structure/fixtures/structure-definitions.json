@@ -153,10 +153,7 @@
             "path": "Observation.effective[x]",
             "min": 0,
             "max": "1",
-            "type": [
-              { "code": "dateTime" },
-              { "code": "Period" }
-            ],
+            "type": [{ "code": "dateTime" }, { "code": "Period" }],
             "short": "Clinically relevant time"
           }
         ]

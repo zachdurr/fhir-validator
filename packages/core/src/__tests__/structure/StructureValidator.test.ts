@@ -15,7 +15,11 @@ beforeAll(() => {
   validator = new StructureValidator(loader);
 });
 
-function findIssue(issues: ValidationIssue[], code: string, pathPrefix?: string): ValidationIssue | undefined {
+function findIssue(
+  issues: ValidationIssue[],
+  code: string,
+  pathPrefix?: string,
+): ValidationIssue | undefined {
   return issues.find(
     (i) => i.code === code && (pathPrefix === undefined || i.path.startsWith(pathPrefix)),
   );
@@ -466,7 +470,9 @@ describe("nested objects", () => {
       name: [{ family: "Smith", unknownProp: "test" }],
     });
     expect(result.valid).toBe(false);
-    expect(findIssue(result.issues, "UNKNOWN_PROPERTY", "Patient.name[0].unknownProp")).toBeDefined();
+    expect(
+      findIssue(result.issues, "UNKNOWN_PROPERTY", "Patient.name[0].unknownProp"),
+    ).toBeDefined();
   });
 
   it("validates deep nesting (Coding inside CodeableConcept)", () => {
@@ -521,7 +527,9 @@ describe("nested objects", () => {
       },
     });
     expect(result.valid).toBe(false);
-    expect(findIssue(result.issues, "INVALID_TYPE", "Observation.code.coding[0].system")).toBeDefined();
+    expect(
+      findIssue(result.issues, "INVALID_TYPE", "Observation.code.coding[0].system"),
+    ).toBeDefined();
   });
 });
 
@@ -553,7 +561,9 @@ describe("BackboneElement", () => {
       ],
     });
     expect(result.valid).toBe(false);
-    expect(findIssue(result.issues, "UNKNOWN_PROPERTY", "Patient.contact[0].unknownField")).toBeDefined();
+    expect(
+      findIssue(result.issues, "UNKNOWN_PROPERTY", "Patient.contact[0].unknownField"),
+    ).toBeDefined();
   });
 
   it("validates nested complex types inside backbone", () => {

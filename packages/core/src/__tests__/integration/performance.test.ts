@@ -38,17 +38,24 @@ function generatePatient(index: number): Record<string, unknown> {
         given: [`Given-${index}`, `Middle-${index}`],
       },
     ],
-    contact: index % 5 === 0
-      ? [{
-        name: { family: `Contact-${index}`, given: [`ContactGiven-${index}`] },
-        relationship: [{
-          coding: [{
-            system: "http://terminology.hl7.org/CodeSystem/v2-0131",
-            code: "N",
-          }],
-        }],
-      }]
-      : undefined,
+    contact:
+      index % 5 === 0
+        ? [
+            {
+              name: { family: `Contact-${index}`, given: [`ContactGiven-${index}`] },
+              relationship: [
+                {
+                  coding: [
+                    {
+                      system: "http://terminology.hl7.org/CodeSystem/v2-0131",
+                      code: "N",
+                    },
+                  ],
+                },
+              ],
+            },
+          ]
+        : undefined,
   };
 }
 

@@ -1,11 +1,7 @@
 import { readFileSync } from "node:fs";
 import { resolve, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
-import type {
-  DefinitionIndex,
-  ElementDefinition,
-  StructureDefinition,
-} from "./types.js";
+import type { DefinitionIndex, ElementDefinition, StructureDefinition } from "./types.js";
 
 const DEFAULT_PATH = resolve(
   dirname(fileURLToPath(import.meta.url)),

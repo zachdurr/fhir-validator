@@ -1,9 +1,5 @@
 export { validate } from "./validate.js";
-export type {
-  ValidationIssue,
-  ValidationResult,
-  ValidateOptions,
-} from "./types.js";
+export type { ValidationIssue, ValidationResult, ValidateOptions } from "./types.js";
 export { DefinitionLoader } from "./loader/index.js";
 export { StructureValidator } from "./structure/index.js";
 export { MessageFormatter } from "./messages/index.js";

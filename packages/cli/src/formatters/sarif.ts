@@ -44,9 +44,7 @@ export function formatSarif(results: FileResult[]): string {
         });
       }
       const uri =
-        result.filePath === "<stdin>"
-          ? "stdin"
-          : pathToFileURL(resolve(result.filePath)).href;
+        result.filePath === "<stdin>" ? "stdin" : pathToFileURL(resolve(result.filePath)).href;
       sarifResults.push({
         ruleId,
         level: "error",
@@ -72,9 +70,7 @@ export function formatSarif(results: FileResult[]): string {
       }
 
       const uri =
-        result.filePath === "<stdin>"
-          ? "stdin"
-          : pathToFileURL(resolve(result.filePath)).href;
+        result.filePath === "<stdin>" ? "stdin" : pathToFileURL(resolve(result.filePath)).href;
 
       sarifResults.push({
         ruleId: issue.code,
@@ -98,7 +94,8 @@ export function formatSarif(results: FileResult[]): string {
   }
 
   const sarif = {
-    $schema: "https://raw.githubusercontent.com/oasis-tcs/sarif-spec/main/sarif-2.1/schema/sarif-schema-2.1.0.json",
+    $schema:
+      "https://raw.githubusercontent.com/oasis-tcs/sarif-spec/main/sarif-2.1/schema/sarif-schema-2.1.0.json",
     version: "2.1.0" as const,
     runs: [
       {

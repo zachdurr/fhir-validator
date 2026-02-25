@@ -104,17 +104,17 @@ const pos = resolveJsonPosition(json, "Patient.active");
 
 ## Error Codes
 
-| Code | Severity | Description | Example trigger |
-|------|----------|-------------|-----------------|
-| `INVALID_RESOURCE` | error | Input is not a JSON object | `validate(null)`, `validate("string")` |
-| `MISSING_RESOURCE_TYPE` | error | No `resourceType` field | `validate({})` |
-| `INVALID_RESOURCE_TYPE` | error | `resourceType` not a string | `validate({ resourceType: 123 })` |
-| `UNKNOWN_RESOURCE_TYPE` | error | Type not in definitions | `validate({ resourceType: "Fake" })` |
-| `UNKNOWN_PROPERTY` | error | Property not defined on type | `Patient.nmae` (suggests `name`) |
-| `REQUIRED_FIELD` | error | Required field missing/null | `Observation` without `status` |
-| `CARDINALITY_ERROR` | error | Wrong cardinality | `active: [true]` (max=1) |
-| `INVALID_TYPE` | error | Wrong primitive type | `active: "true"` (expects boolean) |
-| `CHOICE_TYPE_MULTIPLE` | error | Multiple choice variants | Both `valueString` and `valueInteger` |
+| Code                    | Severity | Description                  | Example trigger                        |
+| ----------------------- | -------- | ---------------------------- | -------------------------------------- |
+| `INVALID_RESOURCE`      | error    | Input is not a JSON object   | `validate(null)`, `validate("string")` |
+| `MISSING_RESOURCE_TYPE` | error    | No `resourceType` field      | `validate({})`                         |
+| `INVALID_RESOURCE_TYPE` | error    | `resourceType` not a string  | `validate({ resourceType: 123 })`      |
+| `UNKNOWN_RESOURCE_TYPE` | error    | Type not in definitions      | `validate({ resourceType: "Fake" })`   |
+| `UNKNOWN_PROPERTY`      | error    | Property not defined on type | `Patient.nmae` (suggests `name`)       |
+| `REQUIRED_FIELD`        | error    | Required field missing/null  | `Observation` without `status`         |
+| `CARDINALITY_ERROR`     | error    | Wrong cardinality            | `active: [true]` (max=1)               |
+| `INVALID_TYPE`          | error    | Wrong primitive type         | `active: "true"` (expects boolean)     |
+| `CHOICE_TYPE_MULTIPLE`  | error    | Multiple choice variants     | Both `valueString` and `valueInteger`  |
 
 ## Types
 
@@ -126,17 +126,17 @@ interface ValidationResult {
 
 interface ValidationIssue {
   severity: "error" | "warning" | "info";
-  path: string;       // e.g., "Patient.name[0].family"
-  message: string;    // Human-readable error message
-  code: string;       // Machine-readable error code
-  details?: string;   // Extended explanation and guidance
-  url?: string;       // Link to relevant FHIR spec page
+  path: string; // e.g., "Patient.name[0].family"
+  message: string; // Human-readable error message
+  code: string; // Machine-readable error code
+  details?: string; // Extended explanation and guidance
+  url?: string; // Link to relevant FHIR spec page
 }
 
 interface JsonPosition {
-  line: number;       // 0-based line number
-  startChar: number;  // 0-based start column
-  endChar: number;    // 0-based end column (exclusive)
+  line: number; // 0-based line number
+  startChar: number; // 0-based start column
+  endChar: number; // 0-based end column (exclusive)
 }
 ```
 

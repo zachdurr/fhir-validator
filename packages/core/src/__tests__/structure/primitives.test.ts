@@ -212,15 +212,11 @@ describe("validatePrimitive", () => {
 
   describe("uuid", () => {
     it("accepts valid uuid", () => {
-      expect(
-        validatePrimitive("uuid", "urn:uuid:550e8400-e29b-41d4-a716-446655440000"),
-      ).toBeNull();
+      expect(validatePrimitive("uuid", "urn:uuid:550e8400-e29b-41d4-a716-446655440000")).toBeNull();
     });
 
     it("rejects without urn:uuid prefix", () => {
-      expect(
-        validatePrimitive("uuid", "550e8400-e29b-41d4-a716-446655440000"),
-      ).not.toBeNull();
+      expect(validatePrimitive("uuid", "550e8400-e29b-41d4-a716-446655440000")).not.toBeNull();
     });
 
     it("rejects invalid uuid", () => {
@@ -264,15 +260,11 @@ describe("validatePrimitive", () => {
     });
 
     it("accepts dateTime with timezone offset", () => {
-      expect(
-        validatePrimitive("dateTime", "2024-01-15T10:30:00+05:00"),
-      ).toBeNull();
+      expect(validatePrimitive("dateTime", "2024-01-15T10:30:00+05:00")).toBeNull();
     });
 
     it("accepts dateTime with milliseconds", () => {
-      expect(
-        validatePrimitive("dateTime", "2024-01-15T10:30:00.123Z"),
-      ).toBeNull();
+      expect(validatePrimitive("dateTime", "2024-01-15T10:30:00.123Z")).toBeNull();
     });
 
     it("rejects invalid format", () => {
@@ -282,21 +274,15 @@ describe("validatePrimitive", () => {
 
   describe("instant", () => {
     it("accepts full instant with Z", () => {
-      expect(
-        validatePrimitive("instant", "2024-01-15T10:30:00Z"),
-      ).toBeNull();
+      expect(validatePrimitive("instant", "2024-01-15T10:30:00Z")).toBeNull();
     });
 
     it("accepts instant with offset", () => {
-      expect(
-        validatePrimitive("instant", "2024-01-15T10:30:00+05:00"),
-      ).toBeNull();
+      expect(validatePrimitive("instant", "2024-01-15T10:30:00+05:00")).toBeNull();
     });
 
     it("accepts instant with milliseconds", () => {
-      expect(
-        validatePrimitive("instant", "2024-01-15T10:30:00.123Z"),
-      ).toBeNull();
+      expect(validatePrimitive("instant", "2024-01-15T10:30:00.123Z")).toBeNull();
     });
 
     it("rejects date only", () => {
@@ -304,9 +290,7 @@ describe("validatePrimitive", () => {
     });
 
     it("rejects without timezone", () => {
-      expect(
-        validatePrimitive("instant", "2024-01-15T10:30:00"),
-      ).not.toBeNull();
+      expect(validatePrimitive("instant", "2024-01-15T10:30:00")).not.toBeNull();
     });
   });
 

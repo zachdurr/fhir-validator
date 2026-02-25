@@ -17,7 +17,10 @@ beforeAll(() => {
 function expectValid(resource: unknown, label: string): void {
   const result = validator.validate(resource);
   const errors = result.issues.filter((i) => i.severity === "error");
-  expect(errors, `"${label}" should have zero errors but got: ${JSON.stringify(errors)}`).toHaveLength(0);
+  expect(
+    errors,
+    `"${label}" should have zero errors but got: ${JSON.stringify(errors)}`,
+  ).toHaveLength(0);
   expect(result.valid, `"${label}" should be valid`).toBe(true);
 }
 
@@ -44,13 +47,15 @@ describe("Patient — no false positives", () => {
     expectValid(
       {
         resourceType: "Patient",
-        name: [{
-          use: "official",
-          family: "Johnson",
-          given: ["Robert", "James"],
-          prefix: ["Mr."],
-          suffix: ["III"],
-        }],
+        name: [
+          {
+            use: "official",
+            family: "Johnson",
+            given: ["Robert", "James"],
+            prefix: ["Mr."],
+            suffix: ["III"],
+          },
+        ],
       },
       "Patient with full name",
     );
@@ -100,33 +105,36 @@ describe("Patient — no false positives", () => {
     expectValid(
       {
         resourceType: "Patient",
-        contact: [{
-          name: { family: "Doe", given: ["Jane"] },
-          relationship: [{
-            coding: [{ system: "http://terminology.hl7.org/CodeSystem/v2-0131", code: "N" }],
-            text: "Spouse",
-          }],
-        }],
+        contact: [
+          {
+            name: { family: "Doe", given: ["Jane"] },
+            relationship: [
+              {
+                coding: [{ system: "http://terminology.hl7.org/CodeSystem/v2-0131", code: "N" }],
+                text: "Spouse",
+              },
+            ],
+          },
+        ],
       },
       "Patient with contact",
     );
   });
 
   it("Patient with extension array", () => {
-    expectValid(
-      { resourceType: "Patient", extension: [] },
-      "Patient with extension",
-    );
+    expectValid({ resourceType: "Patient", extension: [] }, "Patient with extension");
   });
 
   it("Patient with name period", () => {
     expectValid(
       {
         resourceType: "Patient",
-        name: [{
-          family: "Smith",
-          period: { start: "2020-01-01", end: "2024-12-31" },
-        }],
+        name: [
+          {
+            family: "Smith",
+            period: { start: "2020-01-01", end: "2024-12-31" },
+          },
+        ],
       },
       "Patient with name period",
     );
@@ -150,7 +158,12 @@ describe("Observation — no false positives", () => {
         resourceType: "Observation",
         status: "final",
         code: { coding: [{ system: "http://loinc.org", code: "8867-4" }] },
-        valueQuantity: { value: 72, unit: "bpm", system: "http://unitsofmeasure.org", code: "/min" },
+        valueQuantity: {
+          value: 72,
+          unit: "bpm",
+          system: "http://unitsofmeasure.org",
+          code: "/min",
+        },
       },
       "Observation valueQuantity",
     );

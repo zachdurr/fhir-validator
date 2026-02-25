@@ -7,14 +7,22 @@
   "engines": {
     "vscode": "^1.85.0"
   },
-  "categories": ["Linters", "Programming Languages"],
-  "activationEvents": ["onLanguage:fhir-json", "onLanguage:json"],
+  "categories": [
+    "Linters",
+    "Programming Languages"
+  ],
+  "activationEvents": [
+    "onLanguage:fhir-json",
+    "onLanguage:json"
+  ],
   "main": "./dist/extension.js",
   "contributes": {
     "languages": [
       {
         "id": "fhir-json",
-        "extensions": [".fhir.json"],
+        "extensions": [
+          ".fhir.json"
+        ],
         "configuration": "./language-configuration.json"
       }
     ],
@@ -29,7 +37,11 @@
         "fhir-validate.severity.unknownProperties": {
           "type": "string",
           "default": "warning",
-          "enum": ["error", "warning", "info"],
+          "enum": [
+            "error",
+            "warning",
+            "info"
+          ],
           "description": "Severity level for unknown properties in FHIR resources"
         }
       }

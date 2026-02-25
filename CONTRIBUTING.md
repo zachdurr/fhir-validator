@@ -80,6 +80,7 @@ pnpm --filter @fhir-validate/core typecheck
 3. **Add the error code** constant — use SCREAMING_SNAKE_CASE (e.g., `REQUIRED_FIELD`, `INVALID_TYPE`)
 
 4. **Write tests** in `packages/core/src/__tests__/structure/StructureValidator.test.ts`:
+
    ```typescript
    it("flags the new validation error", () => {
      const result = validator.validate({
@@ -98,6 +99,7 @@ pnpm --filter @fhir-validate/core typecheck
 Test definitions live in `packages/core/src/__tests__/structure/fixtures/structure-definitions.json`. This is a subset of FHIR R4 used for fast, deterministic tests.
 
 To add a resource type:
+
 1. Add the StructureDefinition to the `definitions` array
 2. Add the name→index mapping to `resources`
 3. Add the URL→index mapping to `byUrl`

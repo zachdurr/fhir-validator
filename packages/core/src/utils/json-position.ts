@@ -13,10 +13,7 @@ export interface JsonPosition {
  *   - "resourceType" (no dot) → ["resourceType"]
  *   - "" (empty) → root position {0, 0, 1}
  */
-export function resolveJsonPosition(
-  jsonText: string,
-  fhirPath: string,
-): JsonPosition | undefined {
+export function resolveJsonPosition(jsonText: string, fhirPath: string): JsonPosition | undefined {
   if (fhirPath === "") {
     return { line: 0, startChar: 0, endChar: 1 };
   }
@@ -60,10 +57,7 @@ function parsePath(fhirPath: string): Segment[] {
 /**
  * State-machine JSON scanner to find the position of a value at the given path.
  */
-function findPosition(
-  text: string,
-  targetSegments: Segment[],
-): JsonPosition | undefined {
+function findPosition(text: string, targetSegments: Segment[]): JsonPosition | undefined {
   let i = 0;
   const len = text.length;
   let line = 0;
@@ -87,7 +81,10 @@ function findPosition(
   }
 
   function skipWhitespace(): void {
-    while (i < len && (text[i] === " " || text[i] === "\t" || text[i] === "\r" || text[i] === "\n")) {
+    while (
+      i < len &&
+      (text[i] === " " || text[i] === "\t" || text[i] === "\r" || text[i] === "\n")
+    ) {
       advance();
     }
   }

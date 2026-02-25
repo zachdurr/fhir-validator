@@ -1,9 +1,6 @@
 import type { ValidationResult, ValidateOptions, ValidationIssue } from "./types.js";
 
-export function validate(
-  resource: unknown,
-  options: ValidateOptions = {}
-): ValidationResult {
+export function validate(resource: unknown, options: ValidateOptions = {}): ValidationResult {
   const issues: ValidationIssue[] = [];
 
   if (resource == null) {

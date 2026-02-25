@@ -41,5 +41,7 @@ if (existsSync(definitionsSrc)) {
   copyFileSync(definitionsSrc, definitionsDest);
   console.log("✓ Copied r4-definitions.json to dist/");
 } else {
-  console.warn("⚠ r4-definitions.json not found — run `pnpm --filter @fhir-validate/core build:definitions` first");
+  console.warn(
+    "⚠ r4-definitions.json not found — run `pnpm --filter @fhir-validate/core build:definitions` first",
+  );
 }

@@ -18,34 +18,46 @@ function makeCtx(overrides: Partial<PropertyContext> = {}): PropertyContext {
 // ---------------------------------------------------------------------------
 describe("unknown property suggestions", () => {
   it('suggests "name" for "nme"', () => {
-    const issue = fmt.formatUnknownProperty("nme", makeCtx({
-      validProperties: ["name", "status", "active", "gender"],
-    }));
+    const issue = fmt.formatUnknownProperty(
+      "nme",
+      makeCtx({
+        validProperties: ["name", "status", "active", "gender"],
+      }),
+    );
     expect(issue.code).toBe("UNKNOWN_PROPERTY");
     expect(issue.message).toContain('Did you mean "name"');
   });
 
   it('suggests "status" for "statis"', () => {
-    const issue = fmt.formatUnknownProperty("statis", makeCtx({
-      fhirPath: "Observation",
-      jsonPath: "Observation",
-      resourceType: "Observation",
-      validProperties: ["status", "code", "subject", "value[x]"],
-    }));
+    const issue = fmt.formatUnknownProperty(
+      "statis",
+      makeCtx({
+        fhirPath: "Observation",
+        jsonPath: "Observation",
+        resourceType: "Observation",
+        validProperties: ["status", "code", "subject", "value[x]"],
+      }),
+    );
     expect(issue.message).toContain('Did you mean "status"');
   });
 
   it("does not suggest for completely unrelated string", () => {
-    const issue = fmt.formatUnknownProperty("zzzzz", makeCtx({
-      validProperties: ["name", "status", "active"],
-    }));
+    const issue = fmt.formatUnknownProperty(
+      "zzzzz",
+      makeCtx({
+        validProperties: ["name", "status", "active"],
+      }),
+    );
     expect(issue.message).not.toContain("Did you mean");
   });
 
   it("lists valid properties in details", () => {
-    const issue = fmt.formatUnknownProperty("foo", makeCtx({
-      validProperties: ["name", "active", "gender"],
-    }));
+    const issue = fmt.formatUnknownProperty(
+      "foo",
+      makeCtx({
+        validProperties: ["name", "active", "gender"],
+      }),
+    );
     expect(issue.details).toContain("name");
     expect(issue.details).toContain("active");
     expect(issue.details).toContain("gender");
@@ -80,11 +92,14 @@ describe("unknown resource type suggestions", () => {
 // ---------------------------------------------------------------------------
 describe("URL generation", () => {
   it("generates resource field URL for resource properties", () => {
-    const issue = fmt.formatRequiredField("status", makeCtx({
-      resourceType: "Observation",
-      fhirPath: "Observation",
-      jsonPath: "Observation",
-    }));
+    const issue = fmt.formatRequiredField(
+      "status",
+      makeCtx({
+        resourceType: "Observation",
+        fhirPath: "Observation",
+        jsonPath: "Observation",
+      }),
+    );
     expect(issue.url).toContain("observation-definitions.html#Observation.status");
   });
 
@@ -103,10 +118,14 @@ describe("URL generation", () => {
   });
 
   it("generates datatypes URL for complex type errors", () => {
-    const issue = fmt.formatExpectedObject("HumanName", "string", makeCtx({
-      fhirPath: "HumanName.family",
-      jsonPath: "Patient.name[0].family",
-    }));
+    const issue = fmt.formatExpectedObject(
+      "HumanName",
+      "string",
+      makeCtx({
+        fhirPath: "HumanName.family",
+        jsonPath: "Patient.name[0].family",
+      }),
+    );
     expect(issue.url).toContain("datatypes");
   });
 });
@@ -116,35 +135,51 @@ describe("URL generation", () => {
 // ---------------------------------------------------------------------------
 describe("type examples in messages", () => {
   it("includes HumanName example", () => {
-    const issue = fmt.formatExpectedObject("HumanName", "string", makeCtx({
-      fhirPath: "Patient.name",
-      jsonPath: "Patient.name[0]",
-    }));
+    const issue = fmt.formatExpectedObject(
+      "HumanName",
+      "string",
+      makeCtx({
+        fhirPath: "Patient.name",
+        jsonPath: "Patient.name[0]",
+      }),
+    );
     expect(issue.message).toContain("family");
     expect(issue.message).toContain("Smith");
   });
 
   it("includes CodeableConcept example", () => {
-    const issue = fmt.formatExpectedObject("CodeableConcept", 42, makeCtx({
-      fhirPath: "Observation.code",
-      jsonPath: "Observation.code",
-    }));
+    const issue = fmt.formatExpectedObject(
+      "CodeableConcept",
+      42,
+      makeCtx({
+        fhirPath: "Observation.code",
+        jsonPath: "Observation.code",
+      }),
+    );
     expect(issue.message).toContain("coding");
   });
 
   it("includes Quantity example", () => {
-    const issue = fmt.formatExpectedObject("Quantity", "string", makeCtx({
-      fhirPath: "Observation.valueQuantity",
-      jsonPath: "Observation.valueQuantity",
-    }));
+    const issue = fmt.formatExpectedObject(
+      "Quantity",
+      "string",
+      makeCtx({
+        fhirPath: "Observation.valueQuantity",
+        jsonPath: "Observation.valueQuantity",
+      }),
+    );
     expect(issue.message).toContain("mmHg");
   });
 
   it("includes Reference example", () => {
-    const issue = fmt.formatExpectedObject("Reference", [], makeCtx({
-      fhirPath: "Observation.subject",
-      jsonPath: "Observation.subject",
-    }));
+    const issue = fmt.formatExpectedObject(
+      "Reference",
+      [],
+      makeCtx({
+        fhirPath: "Observation.subject",
+        jsonPath: "Observation.subject",
+      }),
+    );
     expect(issue.message).toContain("Patient/123");
   });
 });
@@ -154,27 +189,33 @@ describe("type examples in messages", () => {
 // ---------------------------------------------------------------------------
 describe("short descriptions", () => {
   it("includes elementDef.short in required field message", () => {
-    const issue = fmt.formatRequiredField("status", makeCtx({
-      resourceType: "Observation",
-      fhirPath: "Observation",
-      jsonPath: "Observation",
-      elementDef: {
-        path: "Observation.status",
-        min: 1,
-        max: "1",
-        short: "registered | preliminary | final | amended +",
-      },
-    }));
+    const issue = fmt.formatRequiredField(
+      "status",
+      makeCtx({
+        resourceType: "Observation",
+        fhirPath: "Observation",
+        jsonPath: "Observation",
+        elementDef: {
+          path: "Observation.status",
+          min: 1,
+          max: "1",
+          short: "registered | preliminary | final | amended +",
+        },
+      }),
+    );
     expect(issue.message).toContain("registered | preliminary | final | amended +");
   });
 
   it("omits short description when elementDef.short is absent", () => {
-    const issue = fmt.formatRequiredField("status", makeCtx({
-      resourceType: "Observation",
-      fhirPath: "Observation",
-      jsonPath: "Observation",
-      elementDef: { path: "Observation.status", min: 1, max: "1" },
-    }));
+    const issue = fmt.formatRequiredField(
+      "status",
+      makeCtx({
+        resourceType: "Observation",
+        fhirPath: "Observation",
+        jsonPath: "Observation",
+        elementDef: { path: "Observation.status", min: 1, max: "1" },
+      }),
+    );
     expect(issue.message).not.toContain("(");
   });
 });
@@ -185,7 +226,7 @@ describe("short descriptions", () => {
 describe("common developer mistakes", () => {
   it("string where boolean expected shows format hint", () => {
     const issue = fmt.formatPrimitiveTypeError(
-      'Expected boolean, got string',
+      "Expected boolean, got string",
       "boolean",
       makeCtx({ fhirPath: "Patient.active", jsonPath: "Patient.active" }),
     );
@@ -193,57 +234,79 @@ describe("common developer mistakes", () => {
   });
 
   it("object where array expected shows wrap hint", () => {
-    const issue = fmt.formatCardinalityScalar("name", "*", makeCtx({
-      resourceType: "Patient",
-      fhirPath: "Patient",
-      jsonPath: "Patient",
-    }));
+    const issue = fmt.formatCardinalityScalar(
+      "name",
+      "*",
+      makeCtx({
+        resourceType: "Patient",
+        fhirPath: "Patient",
+        jsonPath: "Patient",
+      }),
+    );
     expect(issue.details).toContain("wrapped in a JSON array");
   });
 
   it("non-object where HumanName expected shows example", () => {
-    const issue = fmt.formatExpectedObject("HumanName", "string", makeCtx({
-      fhirPath: "Patient.name",
-      jsonPath: "Patient.name[0]",
-    }));
+    const issue = fmt.formatExpectedObject(
+      "HumanName",
+      "string",
+      makeCtx({
+        fhirPath: "Patient.name",
+        jsonPath: "Patient.name[0]",
+      }),
+    );
     expect(issue.message).toContain("HumanName");
     expect(issue.message).toContain("family");
   });
 
   it("missing required status shows cardinality", () => {
-    const issue = fmt.formatRequiredField("status", makeCtx({
-      resourceType: "Observation",
-      fhirPath: "Observation",
-      jsonPath: "Observation",
-      elementDef: { path: "Observation.status", min: 1, max: "1" },
-    }));
+    const issue = fmt.formatRequiredField(
+      "status",
+      makeCtx({
+        resourceType: "Observation",
+        fhirPath: "Observation",
+        jsonPath: "Observation",
+        elementDef: { path: "Observation.status", min: 1, max: "1" },
+      }),
+    );
     expect(issue.details).toContain("minimum cardinality of 1");
   });
 
   it("null in array explains FHIR constraint", () => {
-    const issue = fmt.formatNullArrayElement(2, makeCtx({
-      jsonPath: "Patient.name[2]",
-      fhirPath: "Patient.name",
-    }));
+    const issue = fmt.formatNullArrayElement(
+      2,
+      makeCtx({
+        jsonPath: "Patient.name[2]",
+        fhirPath: "Patient.name",
+      }),
+    );
     expect(issue.details).toContain("must not contain null");
     expect(issue.details).toContain("index 2");
   });
 
   it("array where scalar expected shows remove hint", () => {
-    const issue = fmt.formatCardinalityArray("active", "1", makeCtx({
-      resourceType: "Patient",
-      fhirPath: "Patient",
-      jsonPath: "Patient",
-    }));
+    const issue = fmt.formatCardinalityArray(
+      "active",
+      "1",
+      makeCtx({
+        resourceType: "Patient",
+        fhirPath: "Patient",
+        jsonPath: "Patient",
+      }),
+    );
     expect(issue.details).toContain("Remove the array wrapper");
   });
 
   it("multiple choice type variants explains constraint", () => {
-    const issue = fmt.formatChoiceTypeMultiple("value", ["valueString", "valueInteger"], makeCtx({
-      resourceType: "Observation",
-      fhirPath: "Observation",
-      jsonPath: "Observation",
-    }));
+    const issue = fmt.formatChoiceTypeMultiple(
+      "value",
+      ["valueString", "valueInteger"],
+      makeCtx({
+        resourceType: "Observation",
+        fhirPath: "Observation",
+        jsonPath: "Observation",
+      }),
+    );
     expect(issue.details).toContain("only one variant");
     expect(issue.message).toContain("valueString");
     expect(issue.message).toContain("valueInteger");

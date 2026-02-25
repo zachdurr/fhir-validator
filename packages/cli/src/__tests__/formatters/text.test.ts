@@ -38,9 +38,7 @@ describe("formatText", () => {
   it("formats errors with 1-based positions", () => {
     const result = makeResult({
       valid: false,
-      issues: [
-        makeIssue("error", "Patient.id", "Bad id", "INVALID_TYPE", 2, 5, 10),
-      ],
+      issues: [makeIssue("error", "Patient.id", "Bad id", "INVALID_TYPE", 2, 5, 10)],
     });
     const output = formatText([result], false);
     // 0-based line 2 → 1-based line 3, 0-based col 5 → 1-based col 6
@@ -65,9 +63,7 @@ describe("formatText", () => {
   it("formats info issues", () => {
     const result = makeResult({
       valid: true,
-      issues: [
-        makeIssue("info", "Patient.meta", "Info msg", "INFO_CODE", 1, 0, 5),
-      ],
+      issues: [makeIssue("info", "Patient.meta", "Info msg", "INFO_CODE", 1, 0, 5)],
     });
     const output = formatText([result], false);
     expect(output).toContain("info");
@@ -92,9 +88,7 @@ describe("formatText", () => {
   it("suppresses summary in quiet mode", () => {
     const result = makeResult({
       valid: false,
-      issues: [
-        makeIssue("error", "Patient.id", "Err1", "E1", 0, 0, 1),
-      ],
+      issues: [makeIssue("error", "Patient.id", "Err1", "E1", 0, 0, 1)],
     });
     const output = formatText([result], true);
     expect(output).not.toContain("problem");
