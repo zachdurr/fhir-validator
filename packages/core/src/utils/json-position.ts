@@ -124,15 +124,6 @@ function findPosition(
     return true;
   }
 
-  function isTargetPrefix(): boolean {
-    // Check if the current path stack is a prefix of target
-    if (pathStack.length > targetSegments.length) return false;
-    for (let j = 0; j < pathStack.length; j++) {
-      if (pathStack[j] !== targetSegments[j]) return false;
-    }
-    return true;
-  }
-
   function captureValuePosition(): JsonPosition {
     const startLine = line;
     const startChar = col();

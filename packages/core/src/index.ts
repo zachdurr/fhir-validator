@@ -16,3 +16,5 @@ export type {
   ElementDefinitionConstraint,
   DefinitionIndex,
 } from "./loader/index.js";
+export { resolveJsonPosition } from "./utils/json-position.js";
+export type { JsonPosition } from "./utils/json-position.js";

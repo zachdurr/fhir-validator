@@ -13,9 +13,9 @@ import { TextDocument } from "vscode-languageserver-textdocument";
 import {
   DefinitionLoader,
   StructureValidator,
+  resolveJsonPosition,
   type ValidationIssue,
 } from "@fhir-validate/core";
-import { resolveJsonPosition } from "./utils/json-position";
 
 // ---------------------------------------------------------------------------
 // Settings

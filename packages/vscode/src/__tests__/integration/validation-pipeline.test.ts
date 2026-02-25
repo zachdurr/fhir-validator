@@ -1,7 +1,6 @@
 import { resolve } from "node:path";
 import { describe, it, expect } from "vitest";
-import { DefinitionLoader, StructureValidator, type ValidationIssue } from "@fhir-validate/core";
-import { resolveJsonPosition, type JsonPosition } from "../../utils/json-position";
+import { DefinitionLoader, StructureValidator, resolveJsonPosition, type ValidationIssue, type JsonPosition } from "@fhir-validate/core";
 
 // Use the test fixture from core (Patient, Observation, MedicationRequest + types)
 const FIXTURE_PATH = resolve(

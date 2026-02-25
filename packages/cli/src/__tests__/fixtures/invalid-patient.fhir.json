@@ -1,0 +1,12 @@
+{
+  "resourceType": "Patient",
+  "id": "bad-example",
+  "unknownField": "oops",
+  "active": "not-a-boolean",
+  "name": [
+    {
+      "family": "Smith",
+      "badProp": "nope"
+    }
+  ]
+}
