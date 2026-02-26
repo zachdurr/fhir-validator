@@ -144,6 +144,7 @@ Install `fhir-validate-vscode` from the VS Code Marketplace.
 
 ## Roadmap
 
+- **Up next**: Add compatibility for R5 and other FHIR versions
 - **Phase 1** (current): Structural validation — resource types, properties, cardinality, primitives, choice types
 - **Phase 2**: Terminology binding validation — ValueSet membership, CodeSystem lookup
 - **Phase 3**: FHIRPath constraint evaluation — invariant checking via FHIRPath expressions
