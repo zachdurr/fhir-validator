@@ -1,8 +1,8 @@
 # fhir-validate
 
-Offline, fast, TypeScript-native FHIR R4 structural validator. Available as a library, CLI tool, and VS Code extension.
+Offline, fast, TypeScript-native FHIR structural validator. Supports R4 and R5. Available as a library, CLI tool, and VS Code extension.
 
-- **Offline** — no network calls, bundled R4 definitions
+- **Offline** — no network calls, bundled R4 and R5 definitions
 - **Fast** — validates 100+ resources per second
 - **TypeScript-native** — first-class types, zero runtime dependencies in core
 - **Actionable errors** — error codes, did-you-mean suggestions, FHIR spec links
@@ -26,6 +26,7 @@ npm install @fhir-validate/core
 ```typescript
 import { StructureValidator, DefinitionLoader } from "@fhir-validate/core";
 
+// Defaults to R4. Use { version: "R5" } for FHIR R5.
 const loader = new DefinitionLoader();
 const validator = new StructureValidator(loader);
 
@@ -63,6 +64,9 @@ fhir-validate "*.json" --format sarif > results.sarif
 # Read from stdin
 cat patient.json | fhir-validate --stdin
 
+# Validate against FHIR R5
+fhir-validate patient.json --fhir-version R5
+
 # Watch mode
 fhir-validate "data/*.json" --watch
 ```
@@ -76,15 +80,16 @@ Arguments:
   files                  FHIR JSON files or glob patterns
 
 Options:
-  -f, --format <format>  Output format: text, json, sarif (default: "text")
-  -s, --strict           Treat warnings as errors
-  --severity <level>     Minimum severity to report: error, warning, info (default: "info")
-  --quiet                Suppress summary line
-  --max-issues <n>       Max issues per file, 0 = unlimited (default: 0)
-  --stdin                Read JSON from stdin
-  -w, --watch            Watch files for changes
-  -V, --version          Show version
-  -h, --help             Show help
+  -f, --format <format>        Output format: text, json, sarif (default: "text")
+  -s, --strict                 Treat warnings as errors
+  --severity <level>           Minimum severity to report: error, warning, info (default: "info")
+  --quiet                      Suppress summary line
+  --max-issues <n>             Max issues per file, 0 = unlimited (default: 0)
+  --stdin                      Read JSON from stdin
+  --fhir-version <version>     FHIR version to validate against: R4, R5 (default: "R4")
+  -w, --watch                  Watch files for changes
+  -V, --version                Show version
+  -h, --help                   Show help
 ```
 
 ### Exit Codes
@@ -110,6 +115,7 @@ Install `fhir-validate-vscode` from the VS Code Marketplace.
 **Settings:**
 
 - `fhir-validate.enabled` — toggle validation on/off (default: `true`)
+- `fhir-validate.fhirVersion` — FHIR version to validate against: `R4`, `R5` (default: `R4`)
 - `fhir-validate.severity.unknownProperties` — severity for unknown properties: `error`, `warning`, `info` (default: `warning`)
 
 ## Error Codes
@@ -119,7 +125,7 @@ Install `fhir-validate-vscode` from the VS Code Marketplace.
 | `INVALID_RESOURCE`      | error    | Input is not a non-null JSON object                                                 |
 | `MISSING_RESOURCE_TYPE` | error    | Missing `resourceType` field                                                        |
 | `INVALID_RESOURCE_TYPE` | error    | `resourceType` is not a non-empty string                                            |
-| `UNKNOWN_RESOURCE_TYPE` | error    | Resource type not in FHIR R4 (with did-you-mean suggestion)                         |
+| `UNKNOWN_RESOURCE_TYPE` | error    | Resource type not in FHIR definitions (with did-you-mean suggestion)                |
 | `UNKNOWN_PROPERTY`      | error    | Property not defined on the resource type (with did-you-mean)                       |
 | `REQUIRED_FIELD`        | error    | Required field missing, null, or empty array                                        |
 | `CARDINALITY_ERROR`     | error    | Array where scalar expected, or scalar where array expected                         |

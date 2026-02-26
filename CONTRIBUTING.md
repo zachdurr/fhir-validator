@@ -37,7 +37,7 @@ fhir-validate/
 │   │   │   ├── messages/     # MessageFormatter, error code formatting
 │   │   │   ├── utils/        # JSON position resolver, Levenshtein distance
 │   │   │   └── __tests__/    # Unit + integration tests
-│   │   └── definitions/      # Bundled FHIR R4 StructureDefinitions
+│   │   └── definitions/      # Bundled FHIR R4 & R5 StructureDefinitions
 │   │
 │   ├── cli/            # @fhir-validate/cli — command-line tool
 │   │   └── src/
@@ -96,7 +96,7 @@ pnpm --filter @fhir-validate/core typecheck
 
 ## Adding a New Resource Type to Test Fixtures
 
-Test definitions live in `packages/core/src/__tests__/structure/fixtures/structure-definitions.json`. This is a subset of FHIR R4 used for fast, deterministic tests.
+Test definitions live in `packages/core/src/__tests__/structure/fixtures/structure-definitions.json`. This is a subset of FHIR definitions used for fast, deterministic tests.
 
 To add a resource type:
 

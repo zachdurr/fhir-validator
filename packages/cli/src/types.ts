@@ -1,4 +1,4 @@
-import type { ValidationIssue, JsonPosition } from "@fhir-validate/core";
+import type { ValidationIssue, JsonPosition, FhirVersion } from "@fhir-validate/core";
 
 export interface ResolvedIssue {
   issue: ValidationIssue;
@@ -21,6 +21,7 @@ export interface CliOptions {
   maxIssues: number;
   watch: boolean;
   stdin: boolean;
+  fhirVersion: FhirVersion;
 }
 
 export const SEVERITY_RANK: Record<string, number> = {

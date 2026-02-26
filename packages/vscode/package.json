@@ -1,7 +1,7 @@
 {
   "name": "fhir-validate-vscode",
   "displayName": "FHIR Validate",
-  "description": "Real-time FHIR R4 resource validation for VSCode",
+  "description": "Real-time FHIR resource validation for VSCode",
   "version": "0.1.0",
   "publisher": "fhir-validate",
   "engines": {
@@ -33,6 +33,15 @@
           "type": "boolean",
           "default": true,
           "description": "Enable or disable FHIR validation"
+        },
+        "fhir-validate.fhirVersion": {
+          "type": "string",
+          "default": "R4",
+          "enum": [
+            "R4",
+            "R5"
+          ],
+          "description": "FHIR version to validate against"
         },
         "fhir-validate.severity.unknownProperties": {
           "type": "string",

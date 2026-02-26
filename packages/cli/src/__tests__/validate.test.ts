@@ -79,4 +79,15 @@ describe("validateFile", () => {
       expect(i.position!.startChar).toBeGreaterThanOrEqual(0);
     }
   });
+
+  it("accepts fhirVersion parameter", async () => {
+    // Passing "R4" explicitly should work the same as default
+    const result = await validateFile(
+      resolve(FIXTURES, "valid-patient.fhir.json"),
+      "info",
+      0,
+      "R4",
+    );
+    expect(result.valid).toBe(true);
+  });
 });

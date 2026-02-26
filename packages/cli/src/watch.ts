@@ -10,7 +10,12 @@ export function startWatch(patterns: string[], options: CliOptions): void {
   });
 
   async function handleFile(filePath: string): Promise<void> {
-    const result = await validateFile(filePath, options.severity, options.maxIssues);
+    const result = await validateFile(
+      filePath,
+      options.severity,
+      options.maxIssues,
+      options.fhirVersion,
+    );
     const output = formatText([result], options.quiet);
     if (output.trim()) {
       // Clear line and print fresh

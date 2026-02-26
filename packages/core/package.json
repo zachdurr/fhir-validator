@@ -14,11 +14,14 @@
   },
   "files": [
     "dist",
-    "definitions/r4-definitions.json"
+    "definitions/r4-definitions.json",
+    "definitions/r5-definitions.json"
   ],
   "scripts": {
     "build": "tsup",
-    "build:definitions": "tsx scripts/download-definitions.ts",
+    "build:definitions": "npm run build:definitions:r4 && npm run build:definitions:r5",
+    "build:definitions:r4": "tsx scripts/download-definitions.ts R4",
+    "build:definitions:r5": "tsx scripts/download-definitions.ts R5",
     "test": "vitest run",
     "typecheck": "tsc --noEmit"
   },

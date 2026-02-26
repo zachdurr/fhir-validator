@@ -89,6 +89,28 @@ describe("DefinitionLoader", () => {
     });
   });
 
+  describe("version constructor overloads", () => {
+    it("defaults to R4 with no arguments", () => {
+      const loader = new DefinitionLoader();
+      expect(loader.version).toBe("R4");
+    });
+
+    it("defaults to R4 when given a string path", () => {
+      const loader = new DefinitionLoader(FIXTURE_PATH);
+      expect(loader.version).toBe("R4");
+    });
+
+    it("accepts version via options object", () => {
+      const loader = new DefinitionLoader({ version: "R5", definitionsPath: FIXTURE_PATH });
+      expect(loader.version).toBe("R5");
+    });
+
+    it("defaults to R4 when options object has no version", () => {
+      const loader = new DefinitionLoader({ definitionsPath: FIXTURE_PATH });
+      expect(loader.version).toBe("R4");
+    });
+  });
+
   describe("lazy loading", () => {
     it("does not load definitions until first method call", () => {
       // Construction should not throw even with a bad path

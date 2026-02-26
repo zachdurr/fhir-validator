@@ -4,3 +4,4 @@ coverage/
 .turbo/
 pnpm-lock.yaml
 *.d.ts
+packages/core/definitions/

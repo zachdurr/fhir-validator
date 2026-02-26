@@ -32,9 +32,11 @@ const PRIMITIVE_TYPES = new Set([
 const UNIVERSAL_PROPS = new Set(["id", "extension"]);
 
 export class StructureValidator {
-  private readonly formatter = new MessageFormatter();
+  private readonly formatter: MessageFormatter;
 
-  constructor(private readonly loader: DefinitionLoader) {}
+  constructor(private readonly loader: DefinitionLoader) {
+    this.formatter = new MessageFormatter(loader.version);
+  }
 
   validate(resource: unknown): ValidationResult {
     const issues: ValidationIssue[] = [];

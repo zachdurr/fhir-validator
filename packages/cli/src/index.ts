@@ -1,16 +1,19 @@
 import { Command, InvalidArgumentError } from "commander";
 import fg from "fast-glob";
+import type { FhirVersion } from "@fhir-validate/core";
 import { validateFile, validateStdin } from "./validate.js";
 import { formatText, formatJson, formatSarif } from "./formatters/index.js";
 import { startWatch } from "./watch.js";
 import { SEVERITY_RANK } from "./types.js";
 import type { CliOptions, FileResult } from "./types.js";
 
+const VALID_FHIR_VERSIONS = ["R4", "R5"];
+
 const program = new Command();
 
 program
   .name("fhir-validate")
-  .description("Validate FHIR R4 resources from JSON files")
+  .description("Validate FHIR resources from JSON files")
   .version("0.1.0")
   .argument("[files...]", "FHIR JSON files or glob patterns to validate")
   .option("-f, --format <format>", "output format (text, json, sarif)", "text")
@@ -29,6 +32,7 @@ program
   )
   .option("--stdin", "read JSON from stdin", false)
   .option("-w, --watch", "watch files for changes", false)
+  .option("--fhir-version <version>", "FHIR version to validate against (R4, R5)", "R4")
   .action(async (files: string[], opts: Record<string, unknown>) => {
     const options: CliOptions = {
       format: opts.format as CliOptions["format"],
@@ -38,6 +42,7 @@ program
       maxIssues: opts.maxIssues as number,
       watch: opts.watch as boolean,
       stdin: opts.stdin as boolean,
+      fhirVersion: opts.fhirVersion as FhirVersion,
     };
 
     // Validate format
@@ -52,6 +57,14 @@ program
       process.exit(2);
     }
 
+    // Validate FHIR version
+    if (!VALID_FHIR_VERSIONS.includes(options.fhirVersion)) {
+      console.error(
+        `Error: Invalid FHIR version '${options.fhirVersion}'. Use ${VALID_FHIR_VERSIONS.join(" or ")}.`,
+      );
+      process.exit(2);
+    }
+
     // Must have files or --stdin
     if (!options.stdin && files.length === 0) {
       console.error("Error: No files specified. Provide file paths/globs or use --stdin.");
@@ -60,7 +73,7 @@ program
 
     // Stdin mode
     if (options.stdin) {
-      const result = await validateStdin(options.severity, options.maxIssues);
+      const result = await validateStdin(options.severity, options.maxIssues, options.fhirVersion);
       outputResults([result], options);
       return;
     }
@@ -81,7 +94,9 @@ program
     // Validate all files
     const results: FileResult[] = [];
     for (const file of expanded.sort()) {
-      results.push(await validateFile(file, options.severity, options.maxIssues));
+      results.push(
+        await validateFile(file, options.severity, options.maxIssues, options.fhirVersion),
+      );
     }
 
     outputResults(results, options);

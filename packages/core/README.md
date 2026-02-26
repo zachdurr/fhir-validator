@@ -1,6 +1,6 @@
 # @fhir-validate/core
 
-Core FHIR R4 structural validation engine. Offline, fast, TypeScript-native.
+Core FHIR structural validation engine. Supports R4 and R5. Offline, fast, TypeScript-native.
 
 ## Installation
 
@@ -15,7 +15,7 @@ pnpm add @fhir-validate/core
 ```typescript
 import { StructureValidator, DefinitionLoader } from "@fhir-validate/core";
 
-// Load bundled FHIR R4 definitions
+// Load bundled FHIR R4 definitions (default)
 const loader = new DefinitionLoader();
 const validator = new StructureValidator(loader);
 
@@ -63,14 +63,23 @@ const result = validator.validate({
 
 ### `DefinitionLoader`
 
-Loads FHIR StructureDefinition resources. Without arguments, loads the bundled R4 definitions. Pass a file path to load custom/test definitions.
+Loads FHIR StructureDefinition resources. Without arguments, loads the bundled R4 definitions. Pass a version or file path to customize.
 
 ```typescript
-// Bundled R4 definitions (all resource types)
+// Bundled R4 definitions (default)
 const loader = new DefinitionLoader();
+
+// Bundled R5 definitions
+const r5Loader = new DefinitionLoader({ version: "R5" });
 
 // Custom definitions (e.g., for testing)
 const testLoader = new DefinitionLoader("/path/to/definitions.json");
+
+// Version + custom path
+const customLoader = new DefinitionLoader({
+  version: "R5",
+  definitionsPath: "/path/to/r5-definitions.json",
+});
 ```
 
 ### `MessageFormatter`
@@ -80,7 +89,7 @@ Generates structured error messages with FHIR spec links, did-you-mean suggestio
 ```typescript
 import { MessageFormatter } from "@fhir-validate/core";
 
-const formatter = new MessageFormatter();
+const formatter = new MessageFormatter(); // defaults to R4; pass "R5" for R5 URLs
 const issue = formatter.formatRequiredField("status", {
   resourceType: "Observation",
   fhirPath: "Observation",
@@ -142,7 +151,7 @@ interface JsonPosition {
 
 ## Testing with Custom Definitions
 
-For testing, you can load a subset of definitions instead of the full R4 bundle:
+For testing, you can load a subset of definitions instead of the full R4/R5 bundle:
 
 ```typescript
 import { DefinitionLoader } from "@fhir-validate/core";

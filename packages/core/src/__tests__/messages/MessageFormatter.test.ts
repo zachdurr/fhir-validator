@@ -14,6 +14,41 @@ function makeCtx(overrides: Partial<PropertyContext> = {}): PropertyContext {
 }
 
 // ---------------------------------------------------------------------------
+// FHIR version support
+// ---------------------------------------------------------------------------
+describe("FHIR version support", () => {
+  it("default formatter generates R4 URLs", () => {
+    const issue = fmt.formatInvalidResource(null);
+    expect(issue.url).toContain("hl7.org/fhir/R4");
+  });
+
+  it("R4 formatter generates R4 URLs", () => {
+    const r4fmt = new MessageFormatter("R4");
+    const issue = r4fmt.formatInvalidResource(null);
+    expect(issue.url).toContain("hl7.org/fhir/R4");
+  });
+
+  it("R5 formatter generates R5 URLs", () => {
+    const r5fmt = new MessageFormatter("R5");
+    const issue = r5fmt.formatInvalidResource(null);
+    expect(issue.url).toContain("hl7.org/fhir/R5");
+  });
+
+  it("R5 formatter generates R5 URLs for unknown resource type", () => {
+    const r5fmt = new MessageFormatter("R5");
+    const issue = r5fmt.formatUnknownResourceType("Foo", []);
+    expect(issue.url).toContain("hl7.org/fhir/R5");
+    expect(issue.details).toContain("FHIR R5");
+  });
+
+  it("R5 formatter generates R5 URLs for primitive types", () => {
+    const r5fmt = new MessageFormatter("R5");
+    const issue = r5fmt.formatPrimitiveTypeError("bad value", "boolean", makeCtx());
+    expect(issue.url).toContain("hl7.org/fhir/R5");
+  });
+});
+
+// ---------------------------------------------------------------------------
 // "Did you mean?" for unknown properties
 // ---------------------------------------------------------------------------
 describe("unknown property suggestions", () => {

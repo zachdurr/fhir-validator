@@ -1,4 +1,5 @@
-import type { ValidationIssue } from "../types.js";
+import type { FhirVersion, ValidationIssue } from "../types.js";
+import { DEFAULT_FHIR_VERSION, FHIR_BASE_URLS } from "../types.js";
 import type { ElementDefinition } from "../loader/types.js";
 import { findClosestMatch } from "../utils/levenshtein.js";
 
@@ -9,8 +10,6 @@ export interface PropertyContext {
   elementDef?: ElementDefinition;
   validProperties?: string[];
 }
-
-const FHIR_BASE = "https://hl7.org/fhir/R4";
 
 /** Static map of common FHIR type examples. */
 const TYPE_EXAMPLES: Record<string, string> = {
@@ -55,6 +54,14 @@ const PRIMITIVE_FORMAT: Record<string, { format: string; example: string }> = {
 };
 
 export class MessageFormatter {
+  private readonly fhirBase: string;
+  private readonly versionLabel: string;
+
+  constructor(version: FhirVersion = DEFAULT_FHIR_VERSION) {
+    this.fhirBase = FHIR_BASE_URLS[version];
+    this.versionLabel = version;
+  }
+
   // ---------------------------------------------------------------------------
   // Resource-level issues
   // ---------------------------------------------------------------------------
@@ -70,7 +77,7 @@ export class MessageFormatter {
       details:
         'A FHIR resource is a JSON object with at minimum a "resourceType" field. ' +
         `Example: {"resourceType":"Patient","name":[{"family":"Smith"}]}`,
-      url: `${FHIR_BASE}/resource.html`,
+      url: `${this.fhirBase}/resource.html`,
     };
   }
 
@@ -84,7 +91,7 @@ export class MessageFormatter {
         'Every FHIR resource must include a "resourceType" string that identifies what kind ' +
         'of resource it is (e.g. "Patient", "Observation"). ' +
         'Add "resourceType": "<ResourceName>" to the root of your JSON object.',
-      url: `${FHIR_BASE}/resource.html#resource`,
+      url: `${this.fhirBase}/resource.html#resource`,
     };
   }
 
@@ -96,7 +103,7 @@ export class MessageFormatter {
       message: `"resourceType" must be a non-empty string, but received ${typeof value === "string" ? "an empty/whitespace string" : typeof value}.`,
       details:
         'Set "resourceType" to a valid FHIR resource name such as "Patient", "Observation", or "MedicationRequest".',
-      url: `${FHIR_BASE}/resourcelist.html`,
+      url: `${this.fhirBase}/resourcelist.html`,
     };
   }
 
@@ -110,9 +117,9 @@ export class MessageFormatter {
       code: "UNKNOWN_RESOURCE_TYPE",
       message: `Unknown resource type "${name}".${didYouMean}`,
       details:
-        `"${name}" is not a recognized FHIR R4 resource type. ` +
+        `"${name}" is not a recognized FHIR ${this.versionLabel} resource type. ` +
         "See the FHIR resource list for all valid types.",
-      url: `${FHIR_BASE}/resourcelist.html`,
+      url: `${this.fhirBase}/resourcelist.html`,
     };
   }
 
@@ -222,7 +229,7 @@ export class MessageFormatter {
       code: "INVALID_TYPE",
       message: `${error}${formatHint}`,
       details: `The value at "${ctx.fhirPath}" must be a valid FHIR "${typeCode}".`,
-      url: `${FHIR_BASE}/datatypes.html#${typeCode}`,
+      url: `${this.fhirBase}/datatypes.html#${typeCode}`,
     };
   }
 
@@ -237,7 +244,7 @@ export class MessageFormatter {
       code: "INVALID_TYPE",
       message: `Expected object for type "${typeCode}", got ${actualType}.${exampleHint}`,
       details: `"${ctx.fhirPath}" must be a JSON object conforming to the ${typeCode} type, but received ${actualType}.`,
-      url: `${FHIR_BASE}/datatypes.html#${typeCode}`,
+      url: `${this.fhirBase}/datatypes.html#${typeCode}`,
     };
   }
 
@@ -250,7 +257,7 @@ export class MessageFormatter {
       details:
         `FHIR arrays must not contain null values. Element at index ${index} is null. ` +
         "Remove null entries or replace them with valid values.",
-      url: `${FHIR_BASE}/json.html#null`,
+      url: `${this.fhirBase}/json.html#null`,
     };
   }
 
@@ -308,8 +315,8 @@ export class MessageFormatter {
       ].includes(firstSegment);
 
     if (isResourceType) {
-      return `${FHIR_BASE}/${resourceType.toLowerCase()}-definitions.html#${fhirPath}`;
+      return `${this.fhirBase}/${resourceType.toLowerCase()}-definitions.html#${fhirPath}`;
     }
-    return `${FHIR_BASE}/datatypes-definitions.html#${fhirPath}`;
+    return `${this.fhirBase}/datatypes-definitions.html#${fhirPath}`;
   }
 }

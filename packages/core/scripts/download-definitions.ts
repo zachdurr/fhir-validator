@@ -5,11 +5,22 @@ import type {
   ElementDefinition,
   DefinitionIndex,
 } from "../src/loader/types.js";
+import type { FhirVersion } from "../src/types.js";
+import { FHIR_BASE_URLS, DEFAULT_FHIR_VERSION } from "../src/types.js";
 
-const BASE_URL = "https://hl7.org/fhir/R4";
+const version: FhirVersion = (process.argv[2] as FhirVersion) ?? DEFAULT_FHIR_VERSION;
+
+if (!(version in FHIR_BASE_URLS)) {
+  console.error(
+    `Unknown FHIR version "${version}". Supported: ${Object.keys(FHIR_BASE_URLS).join(", ")}`,
+  );
+  process.exit(1);
+}
+
+const BASE_URL = FHIR_BASE_URLS[version];
 const ROOT = join(import.meta.dirname, "..");
 const RAW_DIR = join(ROOT, "definitions", "raw");
-const OUTPUT_PATH = join(ROOT, "definitions", "r4-definitions.json");
+const OUTPUT_PATH = join(ROOT, "definitions", `${version.toLowerCase()}-definitions.json`);
 
 const FILES_TO_DOWNLOAD = [
   { name: "profiles-resources.json", extract: true },
@@ -120,7 +131,7 @@ function validateBundle(data: unknown, filename: string): FhirBundle {
 }
 
 async function main() {
-  console.log("FHIR R4 Definition Downloader\n");
+  console.log(`FHIR ${version} Definition Downloader\n`);
 
   // Ensure directories exist
   mkdirSync(RAW_DIR, { recursive: true });

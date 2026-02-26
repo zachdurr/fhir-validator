@@ -1,5 +1,6 @@
 export { validate } from "./validate.js";
-export type { ValidationIssue, ValidationResult, ValidateOptions } from "./types.js";
+export type { FhirVersion, ValidationIssue, ValidationResult, ValidateOptions } from "./types.js";
+export { DEFAULT_FHIR_VERSION, FHIR_BASE_URLS } from "./types.js";
 export { DefinitionLoader } from "./loader/index.js";
 export { StructureValidator } from "./structure/index.js";
 export { MessageFormatter } from "./messages/index.js";

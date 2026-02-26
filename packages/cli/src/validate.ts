@@ -1,28 +1,41 @@
 import { readFile } from "node:fs/promises";
 import { resolve } from "node:path";
-import { DefinitionLoader, StructureValidator, resolveJsonPosition } from "@fhir-validate/core";
+import {
+  DefinitionLoader,
+  StructureValidator,
+  resolveJsonPosition,
+  DEFAULT_FHIR_VERSION,
+} from "@fhir-validate/core";
+import type { FhirVersion } from "@fhir-validate/core";
 import type { FileResult, ResolvedIssue } from "./types.js";
 import { SEVERITY_RANK } from "./types.js";
 
 let validator: StructureValidator | undefined;
+let cachedVersion: FhirVersion | undefined;
 
-function getValidator(): StructureValidator {
-  if (!validator) {
-    const loader = new DefinitionLoader();
+function getValidator(fhirVersion: FhirVersion = DEFAULT_FHIR_VERSION): StructureValidator {
+  if (!validator || cachedVersion !== fhirVersion) {
+    const loader = new DefinitionLoader({ version: fhirVersion });
     validator = new StructureValidator(loader);
+    cachedVersion = fhirVersion;
   }
   return validator;
 }
 
 /** @internal Test-only: override the singleton validator */
-export function _setValidator(v: StructureValidator): void {
+export function _setValidator(
+  v: StructureValidator,
+  version: FhirVersion = DEFAULT_FHIR_VERSION,
+): void {
   validator = v;
+  cachedVersion = version;
 }
 
 export async function validateFile(
   file: string,
   minSeverity: string = "info",
   maxIssues: number = 0,
+  fhirVersion?: FhirVersion,
 ): Promise<FileResult> {
   const filePath = resolve(file);
 
@@ -39,12 +52,13 @@ export async function validateFile(
     };
   }
 
-  return processContent(content, file, filePath, minSeverity, maxIssues);
+  return processContent(content, file, filePath, minSeverity, maxIssues, fhirVersion);
 }
 
 export async function validateStdin(
   minSeverity: string = "info",
   maxIssues: number = 0,
+  fhirVersion?: FhirVersion,
 ): Promise<FileResult> {
   const chunks: Buffer[] = [];
   for await (const chunk of process.stdin) {
@@ -52,7 +66,7 @@ export async function validateStdin(
   }
   const content = Buffer.concat(chunks).toString("utf-8");
 
-  return processContent(content, "<stdin>", "<stdin>", minSeverity, maxIssues);
+  return processContent(content, "<stdin>", "<stdin>", minSeverity, maxIssues, fhirVersion);
 }
 
 function processContent(
@@ -61,6 +75,7 @@ function processContent(
   filePath: string,
   minSeverity: string,
   maxIssues: number,
+  fhirVersion?: FhirVersion,
 ): FileResult {
   let resource: unknown;
   try {
@@ -77,7 +92,7 @@ function processContent(
 
   let result;
   try {
-    result = getValidator().validate(resource);
+    result = getValidator(fhirVersion).validate(resource);
   } catch {
     return {
       file,

@@ -31,17 +31,19 @@ await esbuild.build({
   format: "cjs",
 });
 
-// Copy r4-definitions.json into dist/ so the server can load it at runtime.
+// Copy definition files into dist/ so the server can load them at runtime.
 // The CJS bundle shims import.meta.url as {}, so DefinitionLoader's default
 // path resolution fails. We must pass an explicit definitionsPath.
-const definitionsSrc = resolve(__dirname, "..", "core", "definitions", "r4-definitions.json");
-const definitionsDest = resolve(__dirname, "dist", "r4-definitions.json");
+for (const file of ["r4-definitions.json", "r5-definitions.json"]) {
+  const src = resolve(__dirname, "..", "core", "definitions", file);
+  const dest = resolve(__dirname, "dist", file);
 
-if (existsSync(definitionsSrc)) {
-  copyFileSync(definitionsSrc, definitionsDest);
-  console.log("✓ Copied r4-definitions.json to dist/");
-} else {
-  console.warn(
-    "⚠ r4-definitions.json not found — run `pnpm --filter @fhir-validate/core build:definitions` first",
-  );
+  if (existsSync(src)) {
+    copyFileSync(src, dest);
+    console.log(`✓ Copied ${file} to dist/`);
+  } else {
+    console.warn(
+      `⚠ ${file} not found — run \`pnpm --filter @fhir-validate/core build:definitions\` first`,
+    );
+  }
 }

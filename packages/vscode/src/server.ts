@@ -14,6 +14,8 @@ import {
   DefinitionLoader,
   StructureValidator,
   resolveJsonPosition,
+  DEFAULT_FHIR_VERSION,
+  type FhirVersion,
   type ValidationIssue,
 } from "@fhir-validate/core";
 
@@ -23,6 +25,7 @@ import {
 
 interface FhirValidateSettings {
   enabled: boolean;
+  fhirVersion: FhirVersion;
   severity: {
     unknownProperties: "error" | "warning" | "info";
   };
@@ -30,6 +33,7 @@ interface FhirValidateSettings {
 
 const defaultSettings: FhirValidateSettings = {
   enabled: true,
+  fhirVersion: DEFAULT_FHIR_VERSION,
   severity: { unknownProperties: "warning" },
 };
 
@@ -47,13 +51,19 @@ const documents = new TextDocuments(TextDocument);
 // ---------------------------------------------------------------------------
 
 let validator: StructureValidator | null = null;
+let cachedVersion: FhirVersion | null = null;
 
 function getValidator(): StructureValidator {
-  if (validator === null) {
+  const version = globalSettings.fhirVersion;
+  if (validator === null || cachedVersion !== version) {
     // __dirname in the CJS bundle points to dist/
-    const definitionsPath = resolve(dirname(__filename), "r4-definitions.json");
+    const definitionsPath = resolve(
+      dirname(__filename),
+      `${version.toLowerCase()}-definitions.json`,
+    );
     const loader = new DefinitionLoader(definitionsPath);
     validator = new StructureValidator(loader);
+    cachedVersion = version;
   }
   return validator;
 }
@@ -253,6 +263,7 @@ function mergeSettings(raw: Partial<FhirValidateSettings> | undefined): FhirVali
   if (!raw) return { ...defaultSettings };
   return {
     enabled: raw.enabled ?? defaultSettings.enabled,
+    fhirVersion: raw.fhirVersion ?? defaultSettings.fhirVersion,
     severity: {
       unknownProperties:
         raw.severity?.unknownProperties ?? defaultSettings.severity.unknownProperties,
