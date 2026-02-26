@@ -28,6 +28,21 @@ const PRIMITIVE_TYPES = new Set([
   "base64Binary",
 ]);
 
+/**
+ * Map FHIRPath system type URIs to FHIR primitive type codes.
+ * Real FHIR definitions use these URIs as type codes on base Resource elements
+ * (e.g. Resource.id has type "http://hl7.org/fhirpath/System.String").
+ */
+const FHIRPATH_TO_PRIMITIVE: Record<string, string> = {
+  "http://hl7.org/fhirpath/System.String": "string",
+  "http://hl7.org/fhirpath/System.Boolean": "boolean",
+  "http://hl7.org/fhirpath/System.Date": "date",
+  "http://hl7.org/fhirpath/System.DateTime": "dateTime",
+  "http://hl7.org/fhirpath/System.Decimal": "decimal",
+  "http://hl7.org/fhirpath/System.Integer": "integer",
+  "http://hl7.org/fhirpath/System.Time": "time",
+};
+
 /** Properties allowed on any FHIR element without being defined in the snapshot. */
 const UNIVERSAL_PROPS = new Set(["id", "extension"]);
 
@@ -167,8 +182,9 @@ export class StructureValidator {
       if (elDef.path.endsWith("[x]")) continue; // handled via choiceMap
       const value = obj[propName];
       if (value === undefined || value === null) continue;
-      const typeCode = elDef.type?.[0]?.code;
-      if (!typeCode) continue;
+      const rawTypeCode = elDef.type?.[0]?.code;
+      if (!rawTypeCode) continue;
+      const typeCode = FHIRPATH_TO_PRIMITIVE[rawTypeCode] ?? rawTypeCode;
       this.validateProperty(
         value,
         elDef,
@@ -368,7 +384,7 @@ export class StructureValidator {
       const group: { concrete: string; typeCode: string }[] = [];
 
       for (const t of types) {
-        const typeCode = t.code;
+        const typeCode = FHIRPATH_TO_PRIMITIVE[t.code] ?? t.code;
         const concrete = baseName + typeCode.charAt(0).toUpperCase() + typeCode.slice(1);
         choiceMap.set(concrete, { elDef, typeCode });
         group.push({ concrete, typeCode });
